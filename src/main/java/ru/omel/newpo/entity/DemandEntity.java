@@ -1,6 +1,8 @@
 package ru.omel.newpo.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -39,6 +41,8 @@ public class DemandEntity {
     @JoinColumn(name = "safe_id")
     private SafeEntity safe;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "demand", cascade = CascadeType.ALL)
     private Set<HistoryEntity> history = new HashSet<>();
 }
