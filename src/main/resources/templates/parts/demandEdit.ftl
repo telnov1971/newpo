@@ -1,7 +1,7 @@
 
 <div>
     <div class="form-group mt-3">
-        <form method="post" enctype="multipart/form-data">
+        <form action="/demand/{Id}" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <label>Объект: </label>
                 <input type="text" class="form-control ${(objectError??)?string('is-invalid', '')}"
@@ -15,7 +15,7 @@
             <div class="form-group">
                 <label>Адрес: </label>
                 <input type="text" class="form-control"
-                       value="<#if demand??>${demand.adress}</#if>" name="tag" placeholder="Адресс" />
+                       value="<#if demand??>${demand.adress}</#if>" name="adress" placeholder="Адресс" />
                 <#if adressError??>
                     <div class="invalid-feedback">
                         ${adressError}
@@ -24,8 +24,8 @@
             </div>
             <div class="form-group">
                 <label>Мощность текущая: </label>
-                <input type="text" class="form-control"
-                       value="<#if demand??>${demand.powerCur}</#if>" name="tag" placeholder="Число" />
+                <input type="number" class="form-control" step="0.1"
+                       value="<#if demand??>${demand.powerCur}</#if>" name="powerCur" placeholder="Число" />
                 <#if adressError??>
                     <div class="invalid-feedback">
                         ${adressError}
@@ -34,8 +34,8 @@
             </div>
             <div class="form-group">
                 <label>Мощность требуемая: </label>
-                <input type="text" class="form-control"
-                       value="<#if demand??>${demand.powerDec}</#if>" name="tag" placeholder="Число" />
+                <input type="number" class="form-control" step="0.1"
+                       value="<#if demand??>${demand.powerDec}</#if>" name="powerDec" placeholder="Число" />
                 <#if adressError??>
                     <div class="invalid-feedback">
                         ${adressError}
@@ -44,7 +44,7 @@
             </div>
             <div class="form-group">
                 <label>Класс напряжения: </label>
-                <select id="volt" label="Класс напряжения" class="form-control">
+                <select id="volt" label="Класс напряжения" class="form-control" name="volt">
                     <#list volts as volt>
                         <#if volt.name==demand.volt.name>
                             <option selected>
@@ -58,7 +58,7 @@
             </div>
             <div class="form-group">
                 <label>Категория надёжности: </label>
-                <select id="safe" label="Категория надёжности" class="form-control">
+                <select id="safe" label="Категория надёжности" class="form-control" name="safe">
                     <#list safes as safe>
                         <#if safe.name==demand.safe.name>
                             <option selected>
@@ -70,6 +70,10 @@
                     </#list>
                 </select>
             </div>
+            <input type="hidden" name="id" value="<#if demand??>${demand.id}</#if>" />
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Отправить</button>
+            </div>
             <!-- div class="form-group">
                 <div class="custom-file">
                     <input type="file" name="file" id="customFile" />
@@ -77,10 +81,6 @@
                 </div>
             </div -->
             <!-- input type="hidden" name="_csrf" value="${_csrf.token}" /-->
-            <input type="hidden" name="id" value="<#if demand??>${demand.id}</#if>" />
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Отправить</button>
-            </div>
         </form>
     </div>
 </div>

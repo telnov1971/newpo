@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface SafeRepository extends JpaRepository<SafeEntity, Long> {
     List<SafeEntity> findAll();
+    SafeEntity findByName(String name);
 }

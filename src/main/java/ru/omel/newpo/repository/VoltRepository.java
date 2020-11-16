@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface VoltRepository extends JpaRepository<VoltEntity, Long> {
     List<VoltEntity> findAll();
+    VoltEntity findByName(String name);
 }

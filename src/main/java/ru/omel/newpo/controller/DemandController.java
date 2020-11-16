@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.omel.newpo.entity.DemandEntity;
 import ru.omel.newpo.entity.SafeEntity;
@@ -14,6 +15,7 @@ import ru.omel.newpo.service.SafeService;
 import ru.omel.newpo.service.VoltService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -41,4 +43,18 @@ public class DemandController {
         model.addAttribute("volts", voltEntities);
         return "demand";
     }
+
+    @PostMapping("/demand/{id}")
+    public String saveEdit(Model model,
+                           @RequestParam Long id,
+                           @RequestParam String object,
+                           @RequestParam String adress,
+                           @RequestParam Double powerCur,
+                           @RequestParam Double powerDec,
+                           @RequestParam String volt,
+                           @RequestParam String safe){
+        demandService.saveDemand(id, object, adress, powerCur, powerDec, volt, safe);
+        return "redirect:/";
+    }
+
 }
