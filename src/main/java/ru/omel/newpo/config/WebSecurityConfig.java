@@ -44,11 +44,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/login",
+                        "/logout",
                         "/**/registration/**",
                         "/static/**",
                         "/activate/*").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin().loginPage("/login").permitAll();
+                .formLogin().loginPage("/login").permitAll()
+                .and()
+                .logout()
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID");
     }
 }

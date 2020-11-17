@@ -39,16 +39,10 @@ public class UserController {
     }
 
     @CrossOrigin
-    @PostMapping("login")
+    @PostMapping("/login")
     public String login(
             @AuthenticationPrincipal UserEntity user,
             @RequestParam String password){
         return "redirect:/";
-    }
-
-    @CrossOrigin
-    @PostMapping("logout")
-    public String logout(){
-        return "redirect:/login";
     }
 }

@@ -9,25 +9,21 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="/">Главная</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/new">Новый запрос</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/user/profile">Профиль</a>
-            </li>
-        </ul>
-
-        <div class="navbar-text mr-3">
-            <#if user??>
-                ${name}
-            <#else>
-                <a class="nav-link" href="/registration">Регистрация</a>
-            </#if>
-        </div>
-        <@l.logout />
+        <#if user??>
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Главная</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/new">Новый запрос</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/user/profile">Профиль</a>
+                </li>
+            </ul>
+            <div class="navbar-text mr-3">
+                    ${name}
+            </div>
+        </#if>
     </div>
 </nav>
