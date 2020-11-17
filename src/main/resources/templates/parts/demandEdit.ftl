@@ -1,6 +1,12 @@
 <div>
     <div class="form-group mt-3">
-        <form action="/demand/{Id}" method="post" enctype="multipart/form-data">
+        <form action="
+            <#if demand??>
+                /demand/{Id}
+            <#else>
+                /new
+            </#if>"
+              method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <label>Объект: </label>
                 <input type="text" class="form-control ${(objectError??)?string('is-invalid', '')}"

@@ -22,4 +22,11 @@ public interface DemandService {
                        String volt,
                        String safe,
                        UserEntity user);
+    boolean newDemand(String object,
+                       String adress,
+                       Double powerCur,
+                       Double powerDec,
+                       String volt,
+                       String safe,
+                       UserEntity user);
 }

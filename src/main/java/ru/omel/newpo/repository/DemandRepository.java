@@ -10,4 +10,7 @@ import java.util.List;
 public interface DemandRepository extends JpaRepository<DemandEntity, Long> {
     List<DemandEntity> findAll();
     List<DemandEntity> findAllByUser(UserEntity user);
+
+    @Query("select max(id) from DemandEntity ")
+    Long maxId();
 }

@@ -9,6 +9,7 @@ import ru.omel.newpo.repository.SafeRepository;
 import ru.omel.newpo.repository.VoltRepository;
 
 import javax.xml.bind.ValidationException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,6 +68,27 @@ public class DemandServiceImpl implements DemandService {
         else
             return false;
 
+    }
+
+    @Override
+    public boolean newDemand(String object, String adress, Double powerCur, Double powerDec, String volt, String safe, UserEntity user) {
+
+        DemandEntity demandEntity = new DemandEntity();
+        /*
+        Long id = demandRepository.maxId() + 1;
+        demandEntity.setId(id);
+
+         */
+        demandEntity.setCreateDate(new Date());
+        demandEntity.setObject(object);
+        demandEntity.setAdress(adress);
+        demandEntity.setPowerCur(powerCur);
+        demandEntity.setPowerDec(powerDec);
+        demandEntity.setVolt(voltRepository.findByName(volt));
+        demandEntity.setSafe(safeRepository.findByName(safe));
+        demandEntity.setUser(user);
+        demandRepository.save(demandEntity);
+        return true;
     }
 
 }

@@ -25,11 +25,9 @@
             <#if user??>
                 ${name}
             <#else>
-                <a class="nav-link" href="/registration">
-                    Регистрация
-                </a>
+                <a class="nav-link" href="/registration">Регистрация</a>
             </#if>
         </div>
-        <!--@l.logout /-->
+        <@l.logout />
     </div>
 </nav>

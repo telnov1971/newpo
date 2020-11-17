@@ -45,4 +45,10 @@ public class UserController {
             @RequestParam String password){
         return "redirect:/";
     }
+
+    @CrossOrigin
+    @PostMapping("logout")
+    public String logout(){
+        return "redirect:/login";
+    }
 }

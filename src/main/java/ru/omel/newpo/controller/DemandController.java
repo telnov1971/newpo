@@ -12,10 +12,13 @@ import ru.omel.newpo.entity.DemandEntity;
 import ru.omel.newpo.entity.SafeEntity;
 import ru.omel.newpo.entity.UserEntity;
 import ru.omel.newpo.entity.VoltEntity;
+import ru.omel.newpo.repository.DemandRepository;
 import ru.omel.newpo.service.DemandService;
 import ru.omel.newpo.service.SafeService;
 import ru.omel.newpo.service.VoltService;
 
+import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -24,6 +27,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class DemandController {
     private final DemandService demandService;
+    private final DemandRepository demandRepository;
     private final SafeService safeService;
     private final VoltService voltService;
 
@@ -74,16 +78,15 @@ public class DemandController {
     }
 
     @PostMapping("/new")
-    public String saveNewDemand(
+    public String saveNewDemand(Model model,
                            @AuthenticationPrincipal UserEntity user,
-                           @RequestParam Long id,
                            @RequestParam String object,
                            @RequestParam String adress,
                            @RequestParam Double powerCur,
                            @RequestParam Double powerDec,
                            @RequestParam String volt,
                            @RequestParam String safe){
-        demandService.saveDemand(id, object, adress, powerCur, powerDec, volt, safe, user);
+        demandService.newDemand(object, adress, powerCur, powerDec, volt, safe, user);
         return "redirect:/";
     }
 
