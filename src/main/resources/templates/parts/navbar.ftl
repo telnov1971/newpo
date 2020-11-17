@@ -1,4 +1,7 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<#include "security.ftl">
+<#import "login.ftl" as l>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light" xmlns="http://www.w3.org/1999/html">
     <a class="navbar-brand" href="/">Личный кабинет</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,5 +21,15 @@
             </li>
         </ul>
 
+        <div class="navbar-text mr-3">
+            <#if user??>
+                ${name}
+            <#else>
+                <a class="nav-link" href="/registration">
+                    Регистрация
+                </a>
+            </#if>
+        </div>
+        <!--@l.logout /-->
     </div>
 </nav>

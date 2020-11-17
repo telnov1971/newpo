@@ -1,6 +1,7 @@
 package ru.omel.newpo.controller;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.omel.newpo.entity.DemandEntity;
 import ru.omel.newpo.entity.SafeEntity;
+import ru.omel.newpo.entity.UserEntity;
 import ru.omel.newpo.entity.VoltEntity;
 import ru.omel.newpo.service.DemandService;
 import ru.omel.newpo.service.SafeService;
@@ -26,8 +28,9 @@ public class DemandController {
     private final VoltService voltService;
 
     @GetMapping("/")
-    public String main(Model model){
-        List<DemandEntity> demandEntities = demandService.findAll();
+    public String main(Model model,
+                       @AuthenticationPrincipal UserEntity user){
+        List<DemandEntity> demandEntities = demandService.findAllByUser(user);
         model.addAttribute("url", "/main");
         model.addAttribute("demands", demandEntities);
         return "main";
@@ -46,6 +49,7 @@ public class DemandController {
 
     @PostMapping("/demand/{id}")
     public String saveEdit(Model model,
+                           @AuthenticationPrincipal UserEntity user,
                            @RequestParam Long id,
                            @RequestParam String object,
                            @RequestParam String adress,
@@ -53,7 +57,33 @@ public class DemandController {
                            @RequestParam Double powerDec,
                            @RequestParam String volt,
                            @RequestParam String safe){
-        demandService.saveDemand(id, object, adress, powerCur, powerDec, volt, safe);
+        demandService.saveDemand(id, object, adress, powerCur, powerDec, volt, safe, user);
+        return "redirect:/";
+    }
+
+    @GetMapping("/new")
+    public String newDemand(Model model,
+                            @AuthenticationPrincipal UserEntity user){
+        //DemandEntity demandEntity = new DemandEntity();
+        List<SafeEntity> safeEntities = safeService.findAll();
+        List<VoltEntity> voltEntities = voltService.findAll();
+        //model.addAttribute("demand", demandEntity);
+        model.addAttribute("safes", safeEntities);
+        model.addAttribute("volts", voltEntities);
+        return "demand";
+    }
+
+    @PostMapping("/new")
+    public String saveNewDemand(
+                           @AuthenticationPrincipal UserEntity user,
+                           @RequestParam Long id,
+                           @RequestParam String object,
+                           @RequestParam String adress,
+                           @RequestParam Double powerCur,
+                           @RequestParam Double powerDec,
+                           @RequestParam String volt,
+                           @RequestParam String safe){
+        demandService.saveDemand(id, object, adress, powerCur, powerDec, volt, safe, user);
         return "redirect:/";
     }
 

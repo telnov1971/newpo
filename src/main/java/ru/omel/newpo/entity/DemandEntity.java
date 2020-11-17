@@ -41,6 +41,10 @@ public class DemandEntity {
     @JoinColumn(name = "safe_id")
     private SafeEntity safe;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
+
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "demand", cascade = CascadeType.ALL)

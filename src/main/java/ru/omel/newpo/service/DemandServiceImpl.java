@@ -3,6 +3,7 @@ package ru.omel.newpo.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.omel.newpo.entity.DemandEntity;
+import ru.omel.newpo.entity.UserEntity;
 import ru.omel.newpo.repository.DemandRepository;
 import ru.omel.newpo.repository.SafeRepository;
 import ru.omel.newpo.repository.VoltRepository;
@@ -30,6 +31,11 @@ public class DemandServiceImpl implements DemandService {
     }
 
     @Override
+    public List<DemandEntity> findAllByUser(UserEntity user) {
+        return demandRepository.findAllByUser(user);
+    }
+
+    @Override
     public DemandEntity findById(Long id) {
         Optional<DemandEntity> demandEntity = demandRepository.findById(id);
         return demandEntity.get();
@@ -42,7 +48,8 @@ public class DemandServiceImpl implements DemandService {
                               Double powerCur,
                               Double powerDec,
                               String volt,
-                              String safe) {
+                              String safe,
+                              UserEntity user) {
         DemandEntity demandEntity;
         Optional<DemandEntity> demandEntityOptional = demandRepository.findById(id);
         if(!demandEntityOptional.isEmpty()) {
@@ -53,6 +60,7 @@ public class DemandServiceImpl implements DemandService {
             demandEntity.setPowerDec(powerDec);
             demandEntity.setVolt(voltRepository.findByName(volt));
             demandEntity.setSafe(safeRepository.findByName(safe));
+            demandEntity.setUser(user);
             demandRepository.save(demandEntity);
             return true;
         }

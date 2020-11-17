@@ -1,4 +1,3 @@
-
 <div>
     <div class="form-group mt-3">
         <form action="/demand/{Id}" method="post" enctype="multipart/form-data">
@@ -24,8 +23,9 @@
             </div>
             <div class="form-group">
                 <label>Мощность текущая: </label>
-                <input type="number" class="form-control" step="0.1"
-                       value="<#if demand??>${demand.powerCur}</#if>" name="powerCur" placeholder="Число" />
+                <input type="number" class="form-control"
+                       value="<#if demand??>${demand.powerCur}</#if>"
+                       name="powerCur"/>
                 <#if adressError??>
                     <div class="invalid-feedback">
                         ${adressError}
@@ -34,8 +34,9 @@
             </div>
             <div class="form-group">
                 <label>Мощность требуемая: </label>
-                <input type="number" class="form-control" step="0.1"
-                       value="<#if demand??>${demand.powerDec}</#if>" name="powerDec" placeholder="Число" />
+                <input type="number" class="form-control"
+                       value="<#if demand??>${demand.powerDec}</#if>"
+                       name="powerDec"/>
                 <#if adressError??>
                     <div class="invalid-feedback">
                         ${adressError}
@@ -46,12 +47,16 @@
                 <label>Класс напряжения: </label>
                 <select id="volt" label="Класс напряжения" class="form-control" name="volt">
                     <#list volts as volt>
-                        <#if volt.name==demand.volt.name>
-                            <option selected>
+                        <#if demand??>
+                            <#if volt.name==demand.volt.name>
+                                <option selected>
+                            <#else>
+                                <option>
+                            </#if>
                         <#else>
                             <option>
                         </#if>
-                                ${volt.name}
+                            ${volt.name}
                         </option>
                     </#list>
                 </select>
@@ -60,8 +65,12 @@
                 <label>Категория надёжности: </label>
                 <select id="safe" label="Категория надёжности" class="form-control" name="safe">
                     <#list safes as safe>
-                        <#if safe.name==demand.safe.name>
-                            <option selected>
+                        <#if demand??>
+                            <#if safe.name==demand.safe.name>
+                                <option selected>
+                            <#else>
+                                <option>
+                            </#if>
                         <#else>
                             <option>
                         </#if>
@@ -73,6 +82,7 @@
             <input type="hidden" name="id" value="<#if demand??>${demand.id}</#if>" />
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">Отправить</button>
+                <button class="btn btn-secondary"><a href="/">Отмена</a></button>
             </div>
             <!-- div class="form-group">
                 <div class="custom-file">
@@ -80,7 +90,7 @@
                     <label class="custom-file-label" for="customFile">Выбор файла</label>
                 </div>
             </div -->
-            <!-- input type="hidden" name="_csrf" value="${_csrf.token}" /-->
+            <input type="hidden" name="_csrf" value="${_csrf.token}" />
         </form>
     </div>
 </div>
