@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import ru.omel.newpo.entity.DemandEntity;
 import ru.omel.newpo.entity.FileEntity;
+import ru.omel.newpo.entity.HistoryEntity;
 import ru.omel.newpo.entity.UserEntity;
 import ru.omel.newpo.repository.FileRepository;
 import ru.omel.newpo.service.DemandService;
 import ru.omel.newpo.service.FileService;
+import ru.omel.newpo.service.HistoryService;
 
 import javax.validation.Valid;
 import java.io.File;
@@ -27,6 +29,8 @@ import java.util.UUID;
 public class FileController {
     @Autowired
     private DemandService demandService;
+    @Autowired
+    private HistoryService historyService;
     @Autowired
     private FileService fileService;
     @Autowired
@@ -42,7 +46,7 @@ public class FileController {
 
         model.addAttribute("files",fileEntities);
         model.addAttribute("demand", demandEntity);
-        return "fileUpload";
+        return "parts/fileList";
     }
 
     @PostMapping("/fileList/{id}")
@@ -58,10 +62,7 @@ public class FileController {
         } catch (IOException e) {
 
         }
-
-        model.addAttribute("files",fileEntities);
-        model.addAttribute("demand", demandEntity);
-        return "redirect:/";
+        return "redirect:/demand/" + id.toString();
     }
 
     private void saveFile(@Valid DemandEntity demand,
@@ -87,6 +88,7 @@ public class FileController {
             fileEntity.setLink(resultFilename);
             fileEntity.setDemand(demand);
             fileRepository.save(fileEntity);
+            historyService.saveHistory("Загружен файл: " + file.getOriginalFilename(),demand);
         }
     }
 

@@ -32,8 +32,7 @@
                 <input type="file" name="file" id="customFile" class="form-control"/>
                 <button class="btn btn-primary"
                         type="submit">
-                    <!-- onsubmit="refresh(${demand.id})" -->
-                    Обновить
+                    Загрузить
                 </button>
             </div>
         </form>
