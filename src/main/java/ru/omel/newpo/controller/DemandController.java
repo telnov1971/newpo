@@ -1,6 +1,9 @@
 package ru.omel.newpo.controller;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,10 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.omel.newpo.entity.*;
 import ru.omel.newpo.repository.DemandRepository;
-import ru.omel.newpo.service.DemandService;
-import ru.omel.newpo.service.HistoryService;
-import ru.omel.newpo.service.SafeService;
-import ru.omel.newpo.service.VoltService;
+import ru.omel.newpo.service.*;
 
 import javax.validation.Valid;
 import java.util.Date;
@@ -22,13 +22,23 @@ import java.util.Map;
 import java.util.Optional;
 
 @Controller
-@AllArgsConstructor
+
 public class DemandController {
-    private final DemandService demandService;
-    private final DemandRepository demandRepository;
-    private final SafeService safeService;
-    private final VoltService voltService;
-    private final HistoryService historyService;
+    @Autowired
+    private DemandService demandService;
+    //private final DemandRepository demandRepository;
+    @Autowired
+    private SafeService safeService;
+    @Autowired
+    private VoltService voltService;
+    @Autowired
+    private HistoryService historyService;
+    @Autowired
+    private FileService fileService;
+
+    @Value("${upload.path}")
+    private String uploadPath;
+
 
     @GetMapping("/")
     public String main(Model model,
@@ -44,10 +54,12 @@ public class DemandController {
         DemandEntity demandEntity = demandService.findById(id);
         List<SafeEntity> safeEntities = safeService.findAll();
         List<VoltEntity> voltEntities = voltService.findAll();
+        List<FileEntity> fileEntities = fileService.findAllByDemand(demandEntity);
         List<HistoryEntity> historyEntities = historyService.findAllByDemand(demandEntity);
         model.addAttribute("demand", demandEntity);
         model.addAttribute("safes", safeEntities);
         model.addAttribute("volts", voltEntities);
+        model.addAttribute("files",fileEntities);
         model.addAttribute("history", historyEntities);
         return "demand";
     }

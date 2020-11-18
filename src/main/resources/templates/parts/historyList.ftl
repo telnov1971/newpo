@@ -1,5 +1,3 @@
-<#include "security.ftl">
-
 <div id="history-list">
     <h3>Исторя изменений</h3>
 
