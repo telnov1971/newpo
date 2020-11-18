@@ -25,4 +25,18 @@
         </tbody>
     </table>
 
+    <div>
+        <form action="/fileList/${demand.id}" method="post" enctype="multipart/form-data">
+            <div>
+                <input type="hidden" name="_csrf" value="${_csrf.token}" />
+                <input type="file" name="file" id="customFile" class="form-control"/>
+                <button class="btn btn-primary"
+                        type="submit">
+                    <!-- onsubmit="refresh(${demand.id})" -->
+                    Обновить
+                </button>
+            </div>
+        </form>
+    </div>
+
 </div>
