@@ -8,12 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.omel.newpo.entity.DemandEntity;
-import ru.omel.newpo.entity.SafeEntity;
-import ru.omel.newpo.entity.UserEntity;
-import ru.omel.newpo.entity.VoltEntity;
+import ru.omel.newpo.entity.*;
 import ru.omel.newpo.repository.DemandRepository;
 import ru.omel.newpo.service.DemandService;
+import ru.omel.newpo.service.HistoryService;
 import ru.omel.newpo.service.SafeService;
 import ru.omel.newpo.service.VoltService;
 
@@ -30,6 +28,7 @@ public class DemandController {
     private final DemandRepository demandRepository;
     private final SafeService safeService;
     private final VoltService voltService;
+    private final HistoryService historyService;
 
     @GetMapping("/")
     public String main(Model model,
@@ -45,9 +44,11 @@ public class DemandController {
         DemandEntity demandEntity = demandService.findById(id);
         List<SafeEntity> safeEntities = safeService.findAll();
         List<VoltEntity> voltEntities = voltService.findAll();
+        List<HistoryEntity> historyEntities = historyService.findAllByDemand(demandEntity);
         model.addAttribute("demand", demandEntity);
         model.addAttribute("safes", safeEntities);
         model.addAttribute("volts", voltEntities);
+        model.addAttribute("history", historyEntities);
         return "demand";
     }
 
@@ -68,10 +69,8 @@ public class DemandController {
     @GetMapping("/new")
     public String newDemand(Model model,
                             @AuthenticationPrincipal UserEntity user){
-        //DemandEntity demandEntity = new DemandEntity();
         List<SafeEntity> safeEntities = safeService.findAll();
         List<VoltEntity> voltEntities = voltService.findAll();
-        //model.addAttribute("demand", demandEntity);
         model.addAttribute("safes", safeEntities);
         model.addAttribute("volts", voltEntities);
         return "demand";

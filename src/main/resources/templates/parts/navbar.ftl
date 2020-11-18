@@ -22,7 +22,7 @@
                 </li>
             </ul>
             <div class="navbar-text mr-3">
-                    ${name}
+                    <a href="/login">${name}</a>
             </div>
         </#if>
     </div>

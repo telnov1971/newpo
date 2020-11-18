@@ -2,6 +2,12 @@
 
 <@c.page>
 
-    <#include "parts/demandEdit.ftl" />
+    <div>
+        <#include "parts/demandEdit.ftl" />
+    </div>
+
+    <div>
+        <#include "parts/historyList.ftl" />
+    </div>
 
 </@c.page>

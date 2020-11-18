@@ -45,4 +45,11 @@ public class UserController {
             @RequestParam String password){
         return "redirect:/";
     }
+
+    @PostMapping("/logout")
+    public String logout(
+            @AuthenticationPrincipal UserEntity user,
+            @RequestParam String password){
+        return "redirect:/";
+    }
 }

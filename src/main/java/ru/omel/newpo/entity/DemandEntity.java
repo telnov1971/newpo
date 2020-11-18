@@ -41,6 +41,8 @@ public class DemandEntity {
     @JoinColumn(name = "safe_id")
     private SafeEntity safe;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private UserEntity user;
@@ -49,4 +51,14 @@ public class DemandEntity {
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "demand", cascade = CascadeType.ALL)
     private Set<HistoryEntity> history = new HashSet<>();
+
+    public String forHistory(){
+        return "Объект: '" + this.getObject() +
+                "'. Адрес: '" + this.getAdress() +
+                "'. Мощность текущая: '" + this.getPowerCur().toString() +
+                "'. Мощность требуемая: '" + this.getPowerDec().toString() +
+                "'. Класс напряжения: '" + this.getVolt().getName() +
+                "'. Категория надёжности: '" + this.getSafe().getName() +
+                "'.";
+    }
 }

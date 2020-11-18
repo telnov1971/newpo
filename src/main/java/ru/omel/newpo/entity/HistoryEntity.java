@@ -3,6 +3,7 @@ package ru.omel.newpo.entity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -21,6 +22,7 @@ public class HistoryEntity {
     private Date createDate;
 
     @Column(name = "event")
+    @Length(max = 2048)
     private String event;
 
     @ToString.Exclude

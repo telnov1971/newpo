@@ -1,10 +1,12 @@
 package ru.omel.newpo.service;
 
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import ru.omel.newpo.entity.DemandEntity;
 import ru.omel.newpo.entity.UserEntity;
 import ru.omel.newpo.repository.DemandRepository;
+import ru.omel.newpo.repository.HistoryRepository;
 import ru.omel.newpo.repository.SafeRepository;
 import ru.omel.newpo.repository.VoltRepository;
 
@@ -20,6 +22,7 @@ public class DemandServiceImpl implements DemandService {
     private VoltRepository voltRepository;
     private SafeRepository safeRepository;
     private DemandRepository demandRepository;
+    private HistoryService historyService;
 
     @Override
     public boolean saveDemand(DemandEntity demand) throws ValidationException {
@@ -51,10 +54,32 @@ public class DemandServiceImpl implements DemandService {
                               String volt,
                               String safe,
                               UserEntity user) {
+        String history = new String();
         DemandEntity demandEntity;
         Optional<DemandEntity> demandEntityOptional = demandRepository.findById(id);
         if(!demandEntityOptional.isEmpty()) {
             demandEntity = demandEntityOptional.get();
+                if (!demandEntityOptional.isEmpty()) {
+                    demandEntity = demandEntityOptional.get();
+                    if(!demandEntity.getObject().equals(object))
+                        history += "Объект с '" + demandEntity.getObject() +
+                                "' на '" + object + "'. ";
+                    if(!demandEntity.getAdress().equals(adress))
+                        history += "Адрес с '" + demandEntity.getAdress() +
+                                "' на '" + adress + "'. ";
+                    if(!demandEntity.getPowerCur().equals(powerCur))
+                        history += "Мощность текущая с '" + demandEntity.getPowerCur().toString() +
+                                "' на '" + powerCur.toString() + "'. ";
+                    if(!demandEntity.getPowerDec().equals(powerDec))
+                        history += "Мощность требуемая с '" + demandEntity.getPowerDec().toString() +
+                                "' на '" + powerDec.toString() + "'. ";
+                    if(!demandEntity.getVolt().equals(voltRepository.findByName(volt)))
+                        history += "Класс напряжения с '" + demandEntity.getVolt().getName() +
+                                "' на '" + voltRepository.findByName(volt).getName() + "'. ";
+                    if(!demandEntity.getSafe().equals(safeRepository.findByName(safe)))
+                        history += "Категория надёжности с '" + demandEntity.getSafe().getName() +
+                                "' на '" + safeRepository.findByName(safe).getName() + "'.";
+                }
             demandEntity.setObject(object);
             demandEntity.setAdress(adress);
             demandEntity.setPowerCur(powerCur);
@@ -62,12 +87,16 @@ public class DemandServiceImpl implements DemandService {
             demandEntity.setVolt(voltRepository.findByName(volt));
             demandEntity.setSafe(safeRepository.findByName(safe));
             demandEntity.setUser(user);
-            demandRepository.save(demandEntity);
-            return true;
+            try {
+                historyService.saveHistory(history, demandEntity);
+                demandRepository.save(demandEntity);
+                return true;
+            } catch (DataAccessException e) {
+                return false;
+            }
         }
         else
             return false;
-
     }
 
     @Override
@@ -87,8 +116,13 @@ public class DemandServiceImpl implements DemandService {
         demandEntity.setVolt(voltRepository.findByName(volt));
         demandEntity.setSafe(safeRepository.findByName(safe));
         demandEntity.setUser(user);
-        demandRepository.save(demandEntity);
-        return true;
+        try {
+            demandRepository.save(demandEntity);
+            historyService.saveHistory("Новый запрос: " + demandEntity.forHistory(), demandEntity);
+            return true;
+        } catch (DataAccessException e) {
+            return false;
+        }
     }
 
 }

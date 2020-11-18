@@ -1,3 +1,5 @@
+<#include "security.ftl">
+
 <div>
     <div class="form-group mt-3">
         <form action="

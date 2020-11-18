@@ -50,10 +50,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/activate/*").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin().loginPage("/login").permitAll()
-                .and()
-                .logout()
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID");
+                .formLogin().loginPage("/login").permitAll();
     }
 }

@@ -1,4 +1,4 @@
-<!-- #include "security.ftl" -->
+<#include "security.ftl">
 
 <div id="demand-list">
     <h3>Список запросов</h3>
