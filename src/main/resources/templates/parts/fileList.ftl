@@ -1,4 +1,5 @@
 <div id="file-list">
+    <script src="/static/fileupload.js"></script>
     <h3>Список файлов</h3>
 
     <table class="table table-hover table-bordered">

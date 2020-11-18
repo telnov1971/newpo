@@ -1,7 +1,5 @@
 package ru.omel.newpo.controller;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -12,14 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.omel.newpo.entity.*;
-import ru.omel.newpo.repository.DemandRepository;
 import ru.omel.newpo.service.*;
 
-import javax.validation.Valid;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 
@@ -35,10 +28,6 @@ public class DemandController {
     private HistoryService historyService;
     @Autowired
     private FileService fileService;
-
-    @Value("${upload.path}")
-    private String uploadPath;
-
 
     @GetMapping("/")
     public String main(Model model,
@@ -64,9 +53,9 @@ public class DemandController {
         return "demand";
     }
 
+
     @PostMapping("/demand/{id}")
-    public String saveEdit(Model model,
-                           @AuthenticationPrincipal UserEntity user,
+    public String saveEdit(@AuthenticationPrincipal UserEntity user,
                            @RequestParam Long id,
                            @RequestParam String object,
                            @RequestParam String adress,
