@@ -87,6 +87,7 @@ public class DemandServiceImpl implements DemandService {
             demandEntity.setVolt(voltRepository.findByName(volt));
             demandEntity.setSafe(safeRepository.findByName(safe));
             demandEntity.setUser(user);
+            demandEntity.setRewrite(true);
             try {
                 historyService.saveHistory(history, demandEntity);
                 demandRepository.save(demandEntity);
@@ -116,6 +117,8 @@ public class DemandServiceImpl implements DemandService {
         demandEntity.setVolt(voltRepository.findByName(volt));
         demandEntity.setSafe(safeRepository.findByName(safe));
         demandEntity.setUser(user);
+        demandEntity.setLoad1c(false);
+        demandEntity.setRewrite(true);
         try {
             demandRepository.save(demandEntity);
             historyService.saveHistory("Новый запрос: " + demandEntity.forHistory(), demandEntity);

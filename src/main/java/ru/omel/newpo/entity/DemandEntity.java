@@ -47,6 +47,11 @@ public class DemandEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    //загружено в 1С
+    private Boolean load1c;
+    //обновлено
+    private Boolean rewrite;
+
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "demand", cascade = CascadeType.ALL)
