@@ -1,24 +1,27 @@
-<!--#import "parts/common.ftl" as c-->
+<#import "parts/common.ftl" as c>
 <#include "parts/security.ftl">
 
-<!-- @c.page -->
+<@c.page>
 
     <h4>Id: ${demand.id}</h4>
     <#if user??>${name}</#if>
+    <p></p>
 
     <div>
-        <form method="post" enctype="multipart/form-data">
+        <form method="get">
+            <div id="filesList">
+                Здесь
+            </div>
+            <div></div>
             <div>
-                <input type="hidden" name="_csrf" value="${_csrf.token}" />
-                <input type="file" name="file" id="customFile" class="form-control"/>
+                <input type="hidden" id="demand_id" value="${demand.id}" />
                 <button class="btn btn-primary"
-                        type="submit">
-                    <!-- onsubmit="refresh(${demand.id})" -->
+                        onclick="searchByDemand()">
                     Обновить
                 </button>
             </div>
-
         </form>
     </div>
 
-<!-- /@c.page -->
+<script src="/static/fileupload.js"></script>
+</@c.page>
