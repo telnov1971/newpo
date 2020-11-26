@@ -36,38 +36,4 @@ public class MailSendService {
 
         mailSender.send(mailMessage);
     }
-
-    public void send2(String emailTo, String subject, String msg){
-        Properties props = new Properties();
-        props.put("mail.smtp.auth", "false");
-        props.put("mail.smtp.starttls.enable", "false");
-        props.put("mail.smtps.ssl.checkserveridentity", "false");
-        props.put("mail.smtps.ssl.trust", "*");
-        props.put("mail.smtp.host", host);
-        props.put("mail.smtp.port", port);
-
-        Session session = Session.getInstance(props,
-                new javax.mail.Authenticator() {
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(username, password);
-                    }
-                });
-
-        try {
-
-            MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress("po@omskelectro.ru"));
-            message.setRecipients(  Message.RecipientType.TO,
-                    InternetAddress.parse(emailTo));
-            message.setSubject(subject);
-            message.setText(msg);
-
-            //Transport.send(message);
-            //System.out.println("Done");
-            mailSender.send((MimeMessage) message);
-
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
