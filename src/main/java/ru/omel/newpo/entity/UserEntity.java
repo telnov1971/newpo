@@ -1,6 +1,5 @@
 package ru.omel.newpo.entity;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,7 +13,6 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Data
 public class UserEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,10 +26,10 @@ public class UserEntity implements UserDetails {
     private String lastname;
     @NotBlank(message = "Пароль не может быть пустым")
     @ToString.Exclude
-    @EqualsAndHashCode.Exclude
+    //@EqualsAndHashCode.Exclude
     private String password;
     @ToString.Exclude
-    @EqualsAndHashCode.Exclude
+    //@EqualsAndHashCode.Exclude
     private boolean active;
 
     @Email(message = "Email is not correct")
@@ -58,6 +56,88 @@ public class UserEntity implements UserDetails {
         if (o == null || getClass() != o.getClass()) return false;
         UserEntity user = (UserEntity) o;
         return Objects.equals(id, user.id);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getActivationCode() {
+        return activationCode;
+    }
+
+    public void setActivationCode(String activationCode) {
+        this.activationCode = activationCode;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public Set<DemandEntity> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(Set<DemandEntity> messages) {
+        this.messages = messages;
     }
 
     @Override

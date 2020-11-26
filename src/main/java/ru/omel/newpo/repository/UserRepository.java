@@ -5,4 +5,6 @@ import ru.omel.newpo.entity.UserEntity;
 
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
     UserEntity findByUsername(String userneme);
+
+    UserEntity findByActivationCode(String code);
 }

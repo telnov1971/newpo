@@ -1,0 +1,19 @@
+#back{
+    display: none;
+    margin-left: 311px;
+}
+#in2{
+    display: none;
+}
+#in2:target {
+    display: block;
+}
+#in2:target + #click_in2{
+    display: none;
+}
+#in2:target ~ #back{
+    display: block;
+}
+#click_in2 {
+
+}
