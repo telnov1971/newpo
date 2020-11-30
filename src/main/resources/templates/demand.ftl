@@ -11,9 +11,6 @@
         <div>
             <#include "parts/fileList.ftl" />
         </div>
-        <div>
-            <#include "parts/fileAdd.ftl" />
-        </div>
     </#if>
 
     <#if history??>
