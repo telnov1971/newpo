@@ -8,8 +8,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class MvcConfig implements WebMvcConfigurer {
-    @Value("${upload.path}")
-    private String uploadPath;
+    @Value("${upload.path.windows}")
+    private String uploadPathWindows;
+    @Value("${upload.path.linux}")
+    private String uploadPathLinux;
 
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/login").setViewName("login");
@@ -17,6 +19,12 @@ public class MvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        String uploadPath, osName;
+        uploadPath = new String();
+        osName = System.getProperty("os.name");
+        if(osName.contains("Windows")) uploadPath = uploadPathWindows;
+        if(osName.contains("Linux")) uploadPath = uploadPathLinux;
+
         registry.addResourceHandler("/file/**")
                 .addResourceLocations("file:///" + uploadPath + "/");
         registry.addResourceHandler("/static/**")

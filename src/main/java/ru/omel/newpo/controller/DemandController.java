@@ -15,6 +15,7 @@ import ru.omel.newpo.repository.FileRepository;
 import ru.omel.newpo.service.*;
 
 import javax.validation.Valid;
+import javax.xml.bind.ValidationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -35,8 +36,10 @@ public class DemandController {
     private FileService fileService;
     @Autowired
     private FileRepository fileRepository;
-    @Value("${upload.path}")
-    private String uploadPath;
+    @Value("${upload.path.windows}")
+    private String uploadPathWindows;
+    @Value("${upload.path.linux}")
+    private String uploadPathLinux;
 
     @GetMapping("/")
     public String main(Model model,
@@ -85,30 +88,36 @@ public class DemandController {
         demandService.saveDemand(id, object, adress, powerCur, powerDec, volt, safe, user);
         DemandEntity demandEntity = demandService.findById(id);
         if(file1!=null && !file1.isEmpty()){
-            try { saveFile(demandEntity, file1);} catch (IOException e) {}}
+            try { saveFile(demandEntity, file1);} catch (IOException | ValidationException e) {}}
         if(file2!=null && !file2.isEmpty()){
-            try { saveFile(demandEntity, file2);} catch (IOException e) {}}
+            try { saveFile(demandEntity, file2);} catch (IOException | ValidationException e) {}}
         if(file3!=null && !file3.isEmpty()){
-            try { saveFile(demandEntity, file3);} catch (IOException e) {}}
+            try { saveFile(demandEntity, file3);} catch (IOException | ValidationException e) {}}
         if(file4!=null && !file4.isEmpty()){
-            try { saveFile(demandEntity, file4);} catch (IOException e) {}}
+            try { saveFile(demandEntity, file4);} catch (IOException | ValidationException e) {}}
         if(file5!=null && !file5.isEmpty()){
-            try { saveFile(demandEntity, file5);} catch (IOException e) {}}
+            try { saveFile(demandEntity, file5);} catch (IOException | ValidationException e) {}}
         if(file6!=null && !file6.isEmpty()){
-            try { saveFile(demandEntity, file6);} catch (IOException e) {}}
+            try { saveFile(demandEntity, file6);} catch (IOException | ValidationException e) {}}
         if(file7!=null && !file7.isEmpty()){
-            try { saveFile(demandEntity, file7);} catch (IOException e) {}}
+            try { saveFile(demandEntity, file7);} catch (IOException | ValidationException e) {}}
         if(file8!=null && !file8.isEmpty()){
-            try { saveFile(demandEntity, file8);} catch (IOException e) {}}
+            try { saveFile(demandEntity, file8);} catch (IOException | ValidationException e) {}}
         if(file9!=null && !file9.isEmpty()){
-            try { saveFile(demandEntity, file9);} catch (IOException e) {}}
+            try { saveFile(demandEntity, file9);} catch (IOException | ValidationException e) {}}
         if(file10!=null && !file10.isEmpty()){
-            try { saveFile(demandEntity, file10);} catch (IOException e) {}}
+            try { saveFile(demandEntity, file10);} catch (IOException | ValidationException e) {}}
         return "redirect:/";
     }
 
     private void saveFile(@Valid DemandEntity demand,
-                          @RequestParam("file") MultipartFile file) throws IOException {
+                          MultipartFile file) throws IOException, ValidationException {
+        String uploadPath, osName;
+        uploadPath = new String();
+        osName = System.getProperty("os.name");
+        if(osName.contains("Windows")) uploadPath = uploadPathWindows;
+        if(osName.contains("Linux")) uploadPath = uploadPathLinux;
+
         FileEntity fileEntity = new FileEntity();
         if (file != null && !file.getOriginalFilename().isEmpty()) {
             File uploadDir = new File(uploadPath);
@@ -129,8 +138,11 @@ public class DemandController {
             fileEntity.setName(file.getOriginalFilename());
             fileEntity.setLink(resultFilename);
             fileEntity.setDemand(demand);
+            fileEntity.setLoad1c(false);
             fileRepository.save(fileEntity);
             historyService.saveHistory("Загружен файл: " + file.getOriginalFilename(),demand);
+            demand.setRewrite(true);
+            demandService.saveDemand(demand);
         }
     }
 
@@ -153,8 +165,39 @@ public class DemandController {
                            @RequestParam Double powerCur,
                            @RequestParam Double powerDec,
                            @RequestParam String volt,
-                           @RequestParam String safe){
-        demandService.newDemand(object, adress, powerCur, powerDec, volt, safe, user);
+                           @RequestParam String safe,
+                           @RequestParam(name = "file1", required = false) MultipartFile file1,
+                           @RequestParam(name = "file2", required = false) MultipartFile file2,
+                           @RequestParam(name = "file3", required = false) MultipartFile file3,
+                           @RequestParam(name = "file4", required = false) MultipartFile file4,
+                           @RequestParam(name = "file5", required = false) MultipartFile file5,
+                           @RequestParam(name = "file6", required = false) MultipartFile file6,
+                           @RequestParam(name = "file7", required = false) MultipartFile file7,
+                           @RequestParam(name = "file8", required = false) MultipartFile file8,
+                           @RequestParam(name = "file9", required = false) MultipartFile file9,
+                           @RequestParam(name = "file10", required = false) MultipartFile file10){
+        DemandEntity demandEntity = new DemandEntity();
+        demandEntity = demandService.newDemand(object, adress, powerCur, powerDec, volt, safe, user);
+        if(file1!=null && !file1.isEmpty()){
+            try { saveFile(demandEntity, file1);} catch (IOException | ValidationException e) {}}
+        if(file2!=null && !file2.isEmpty()){
+            try { saveFile(demandEntity, file2);} catch (IOException | ValidationException e) {}}
+        if(file3!=null && !file3.isEmpty()){
+            try { saveFile(demandEntity, file3);} catch (IOException | ValidationException e) {}}
+        if(file4!=null && !file4.isEmpty()){
+            try { saveFile(demandEntity, file4);} catch (IOException | ValidationException e) {}}
+        if(file5!=null && !file5.isEmpty()){
+            try { saveFile(demandEntity, file5);} catch (IOException | ValidationException e) {}}
+        if(file6!=null && !file6.isEmpty()){
+            try { saveFile(demandEntity, file6);} catch (IOException | ValidationException e) {}}
+        if(file7!=null && !file7.isEmpty()){
+            try { saveFile(demandEntity, file7);} catch (IOException | ValidationException e) {}}
+        if(file8!=null && !file8.isEmpty()){
+            try { saveFile(demandEntity, file8);} catch (IOException | ValidationException e) {}}
+        if(file9!=null && !file9.isEmpty()){
+            try { saveFile(demandEntity, file9);} catch (IOException | ValidationException e) {}}
+        if(file10!=null && !file10.isEmpty()){
+            try { saveFile(demandEntity, file10);} catch (IOException | ValidationException e) {}}
         return "redirect:/";
     }
 

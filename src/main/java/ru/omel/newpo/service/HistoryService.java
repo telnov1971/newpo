@@ -27,6 +27,7 @@ public class HistoryService {
         historyEntity.setCreateDate(new Date());
         historyEntity.setDemand(newDemand);
         historyEntity.setEvent(history);
+        historyEntity.setLoad1c(false);
         try {
             historyRepository.save(historyEntity);
             return true;

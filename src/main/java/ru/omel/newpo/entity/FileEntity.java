@@ -12,6 +12,7 @@ import java.util.Date;
 @Table(name = "file_entity")
 @Data
 @NoArgsConstructor
+@Table(name = "file_entity")
 public class FileEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
