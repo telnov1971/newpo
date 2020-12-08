@@ -25,6 +25,9 @@ public class HistoryEntity {
     @Length(max = 2048)
     private String event;
 
+    @Column(name = "load1c")
+    private Boolean load1c;
+
     @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "demand_id")

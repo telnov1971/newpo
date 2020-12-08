@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
+@Table(name = "file_entity")
 @Data
 @NoArgsConstructor
 public class FileEntity {
@@ -22,6 +23,9 @@ public class FileEntity {
 
     @Column(name = "link")
     private String link;
+
+    @Column(name = "load1c")
+    private Boolean load1c;
 
     @ToString.Exclude
     @ManyToOne
