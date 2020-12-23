@@ -9,7 +9,6 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "file_entity")
 @Data
 @NoArgsConstructor
 @Table(name = "file_entity")
