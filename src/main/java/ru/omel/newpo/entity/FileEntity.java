@@ -1,16 +1,11 @@
 package ru.omel.newpo.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
-@Data
-@NoArgsConstructor
 @Table(name = "file_entity")
 public class FileEntity {
     @Id
@@ -32,9 +27,52 @@ public class FileEntity {
     @JoinColumn(name = "demand_id")
     private DemandEntity demand;
 
+    public FileEntity() {
+    }
+
     FileEntity(String name, String link, DemandEntity demand){
         this.name = name;
         this.link = link;
+        this.demand = demand;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public Boolean getLoad1c() {
+        return load1c;
+    }
+
+    public void setLoad1c(Boolean load1c) {
+        this.load1c = load1c;
+    }
+
+    public DemandEntity getDemand() {
+        return demand;
+    }
+
+    public void setDemand(DemandEntity demand) {
         this.demand = demand;
     }
 

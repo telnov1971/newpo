@@ -3,7 +3,7 @@
 <@c.page>
 Редактирование пользователя
 
-<form action="/user" method="post">
+<form action="${contextPath}/user" method="post">
     <input type="text" name="username" value="${user.username}" />
     <#list roles as role>
     <div>

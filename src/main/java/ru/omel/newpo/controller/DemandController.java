@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.omel.newpo.entity.*;
 import ru.omel.newpo.repository.FileRepository;
@@ -21,7 +18,7 @@ import java.io.IOException;
 import java.util.*;
 
 @Controller
-
+@RequestMapping(name="/newpo")
 public class DemandController {
     @Autowired
     private DemandService demandService;
@@ -40,6 +37,8 @@ public class DemandController {
     private String uploadPathWindows;
     @Value("${upload.path.linux}")
     private String uploadPathLinux;
+    @Value("${server.servlet.contextPath}")
+    private String contextPath;
 
     @GetMapping("/")
     public String main(Model model,
@@ -47,6 +46,7 @@ public class DemandController {
         List<DemandEntity> demandEntities = demandService.findAllByUser(user);
         model.addAttribute("url", "/main");
         model.addAttribute("demands", demandEntities);
+        model.addAttribute("contextPath", contextPath);
         return "main";
     }
 
@@ -62,6 +62,7 @@ public class DemandController {
         model.addAttribute("volts", voltEntities);
         model.addAttribute("files",fileEntities);
         model.addAttribute("history", historyEntities);
+        model.addAttribute("contextPath", contextPath);
         return "demand";
     }
 
@@ -154,6 +155,7 @@ public class DemandController {
         List<VoltEntity> voltEntities = voltService.findAll();
         model.addAttribute("safes", safeEntities);
         model.addAttribute("volts", voltEntities);
+        model.addAttribute("contextPath", contextPath);
         return "demand";
     }
 

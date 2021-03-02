@@ -1,7 +1,5 @@
 package ru.omel.newpo.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 
@@ -9,8 +7,6 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Data
-@NoArgsConstructor
 @Table(name = "history")
 public class HistoryEntity {
     @Id
@@ -36,6 +32,49 @@ public class HistoryEntity {
     HistoryEntity(String event, DemandEntity demand){
         this.createDate = new Date();
         this.event = event;
+        this.demand = demand;
+    }
+
+    public HistoryEntity() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public String getEvent() {
+        return event;
+    }
+
+    public void setEvent(String event) {
+        this.event = event;
+    }
+
+    public Boolean getLoad1c() {
+        return load1c;
+    }
+
+    public void setLoad1c(Boolean load1c) {
+        this.load1c = load1c;
+    }
+
+    public DemandEntity getDemand() {
+        return demand;
+    }
+
+    public void setDemand(DemandEntity demand) {
         this.demand = demand;
     }
 }

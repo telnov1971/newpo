@@ -10,8 +10,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Data
-@NoArgsConstructor
 @Table(name = "safe")
 public class SafeEntity {
     @Id
@@ -37,7 +35,42 @@ public class SafeEntity {
         this.code = code;
     }
 
+    public SafeEntity() {
+    }
+
     SafeEntity(String name){
         this.name = name;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public Set<DemandEntity> getDemands() {
+        return demands;
+    }
+
+    public void setDemands(Set<DemandEntity> demands) {
+        this.demands = demands;
     }
 }

@@ -1,6 +1,7 @@
 package ru.omel.newpo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +14,8 @@ import ru.omel.newpo.service.UserService;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Value("${server.servlet.contextPath}")
+    private String contextPath;
 
     @CrossOrigin
     @GetMapping("profile")
@@ -22,6 +25,7 @@ public class UserController {
         model.addAttribute("email", user.getEmail());
         model.addAttribute("firstname", user.getFirstname());
         model.addAttribute("lastname", user.getLastname());
+        model.addAttribute("contextPath", contextPath);
 
         return "profile";
     }

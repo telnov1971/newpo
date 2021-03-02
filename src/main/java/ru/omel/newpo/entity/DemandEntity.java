@@ -52,6 +52,102 @@ public class DemandEntity {
     //обновлено
     private Boolean rewrite;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public String getObject() {
+        return Object;
+    }
+
+    public void setObject(String object) {
+        Object = object;
+    }
+
+    public String getAdress() {
+        return adress;
+    }
+
+    public void setAdress(String adress) {
+        this.adress = adress;
+    }
+
+    public Double getPowerCur() {
+        return powerCur;
+    }
+
+    public void setPowerCur(Double powerCur) {
+        this.powerCur = powerCur;
+    }
+
+    public Double getPowerDec() {
+        return powerDec;
+    }
+
+    public void setPowerDec(Double powerDec) {
+        this.powerDec = powerDec;
+    }
+
+    public VoltEntity getVolt() {
+        return volt;
+    }
+
+    public void setVolt(VoltEntity volt) {
+        this.volt = volt;
+    }
+
+    public SafeEntity getSafe() {
+        return safe;
+    }
+
+    public void setSafe(SafeEntity safe) {
+        this.safe = safe;
+    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
+
+    public Boolean getLoad1c() {
+        return load1c;
+    }
+
+    public void setLoad1c(Boolean load1c) {
+        this.load1c = load1c;
+    }
+
+    public Boolean getRewrite() {
+        return rewrite;
+    }
+
+    public void setRewrite(Boolean rewrite) {
+        this.rewrite = rewrite;
+    }
+
+    public Set<HistoryEntity> getHistory() {
+        return history;
+    }
+
+    public void setHistory(Set<HistoryEntity> history) {
+        this.history = history;
+    }
+
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "demand", cascade = CascadeType.ALL)
