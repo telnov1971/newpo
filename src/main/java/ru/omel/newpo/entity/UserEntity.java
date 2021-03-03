@@ -1,7 +1,5 @@
 package ru.omel.newpo.entity;
 
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -26,10 +24,8 @@ public class UserEntity implements UserDetails {
     @NotBlank(message = "Имя Отчество не может быть пустым")
     private String lastname;
     @NotBlank(message = "Пароль не может быть пустым")
-    @ToString.Exclude
     //@EqualsAndHashCode.Exclude
     private String password;
-    @ToString.Exclude
     //@EqualsAndHashCode.Exclude
     private boolean active;
 
@@ -37,8 +33,6 @@ public class UserEntity implements UserDetails {
     @NotBlank(message = "Email cannot be empty")
     private String email;
 
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     private String activationCode;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
@@ -46,8 +40,6 @@ public class UserEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<DemandEntity> messages;
 

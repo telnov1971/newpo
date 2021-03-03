@@ -17,12 +17,9 @@ import java.util.Map;
 public class RegistrationController {
     @Autowired
     private UserService userService;
-    @Value("${server.servlet.contextPath}")
-    private String contextPath;
 
     @GetMapping("/registration")
     public String registration(Model model) {
-        model.addAttribute("contextPath", contextPath);
         return "registration";
     }
 
@@ -64,7 +61,6 @@ public class RegistrationController {
             model.addAttribute("messageType", "danger");
             model.addAttribute("message", "Activation code is not found!");
         }
-        model.addAttribute("contextPath", contextPath);
         return "login";
     }
 }

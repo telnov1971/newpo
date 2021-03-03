@@ -1,6 +1,6 @@
 package ru.omel.newpo.service;
 
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import ru.omel.newpo.entity.DemandEntity;
@@ -16,13 +16,20 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
 public class DemandServiceImpl implements DemandService {
 
     private VoltRepository voltRepository;
     private SafeRepository safeRepository;
     private DemandRepository demandRepository;
     private HistoryService historyService;
+
+    @Autowired
+    public DemandServiceImpl(VoltRepository voltRepository, SafeRepository safeRepository, DemandRepository demandRepository, HistoryService historyService) {
+        this.voltRepository = voltRepository;
+        this.safeRepository = safeRepository;
+        this.demandRepository = demandRepository;
+        this.historyService = historyService;
+    }
 
     @Override
     public boolean saveDemand(DemandEntity demand) throws ValidationException {

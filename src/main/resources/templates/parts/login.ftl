@@ -85,7 +85,7 @@
         </#if>
     </button>
     <div class="form-group row">
-        <#if !isRegisterForm><a href="${contextPath}/registration">Регистрация</a></#if>
+        <#if !isRegisterForm><a href="registration">Регистрация</a></#if>
     </div>
     <input type="hidden" name="_csrf" value="${_csrf.token}" />
 </form>

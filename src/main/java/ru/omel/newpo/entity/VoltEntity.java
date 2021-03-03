@@ -1,9 +1,6 @@
 package ru.omel.newpo.entity;
 
 
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,13 +15,9 @@ public class VoltEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     @Column(name = "code")
     private String code;
 
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "volt")
     private Set<DemandEntity> demands = new HashSet<>();
 

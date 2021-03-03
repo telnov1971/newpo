@@ -3,5 +3,5 @@
 
 <@c.page>
 <div class="mb-1">Регистрация</div>
-<@l.login "/registration" true />
+<@l.login "registration" true />
 </@c.page>

@@ -14,8 +14,6 @@ import ru.omel.newpo.service.UserService;
 public class UserController {
     @Autowired
     private UserService userService;
-    @Value("${server.servlet.contextPath}")
-    private String contextPath;
 
     @CrossOrigin
     @GetMapping("profile")
@@ -25,7 +23,6 @@ public class UserController {
         model.addAttribute("email", user.getEmail());
         model.addAttribute("firstname", user.getFirstname());
         model.addAttribute("lastname", user.getLastname());
-        model.addAttribute("contextPath", contextPath);
 
         return "profile";
     }
@@ -52,8 +49,7 @@ public class UserController {
 
     @GetMapping("/logout")
     public String logout(
-            @AuthenticationPrincipal UserEntity user,
-            @RequestParam String password){
-        return "redirect:/";
+            @AuthenticationPrincipal UserEntity user){
+        return "redirect:/logout";
     }
 }

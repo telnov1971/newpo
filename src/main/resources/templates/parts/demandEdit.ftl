@@ -4,9 +4,9 @@
     <div class="form-group mt-3">
         <form action="
             <#if demand??>
-                ${contextPath}/demand/{Id}
+                demand/{Id}
             <#else>
-                ${contextPath}/new
+                new
             </#if>"
               method="post" enctype="multipart/form-data">
             <div class="form-group">
@@ -103,7 +103,7 @@
             <input type="hidden" name="id" value="<#if demand??>${demand.id}</#if>" />
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">Отправить</button>
-                <button class="btn btn-secondary"><a href="${contextPath}/">Отмена</a></button>
+                <button class="btn btn-secondary"><a href=".">Отмена</a></button>
                 <input type="button" class="btn btn-secondary" onclick="addFile();" value="Добавить файл..." />
             </div>
             <input type="hidden" name="_csrf" value="${_csrf.token}" />

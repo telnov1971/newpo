@@ -1,6 +1,5 @@
 package ru.omel.newpo.entity;
 
-import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -24,7 +23,6 @@ public class HistoryEntity {
     @Column(name = "load1c")
     private Boolean load1c;
 
-    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "demand_id")
     private DemandEntity demand;

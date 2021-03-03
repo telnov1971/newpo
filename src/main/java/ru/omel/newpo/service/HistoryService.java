@@ -1,6 +1,6 @@
 package ru.omel.newpo.service;
 
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import ru.omel.newpo.entity.DemandEntity;
@@ -13,10 +13,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
 public class HistoryService {
     private HistoryRepository historyRepository;
     private DemandRepository demandRepository;
+
+    @Autowired
+    public HistoryService(HistoryRepository historyRepository, DemandRepository demandRepository) {
+        this.historyRepository = historyRepository;
+        this.demandRepository = demandRepository;
+    }
 
     public List<HistoryEntity> findAllByDemand(DemandEntity demand){
         return historyRepository.findAllByDemand(demand);
