@@ -4,7 +4,7 @@
     <div class="form-group mt-3">
         <form action="
             <#if demand??>
-                demand/{Id}
+                demand/${demand.id}
             <#else>
                 new
             </#if>"
@@ -55,17 +55,13 @@
                 <label>Класс напряжения: </label>
                 <select id="volt" label="Класс напряжения" class="form-control" name="volt">
                     <#list volts as volt>
+                        <option value="${volt.id}" label="${volt.name}"
                         <#if demand??>
                             <#if volt.name==demand.volt.name>
-                                <option selected>
-                            <#else>
-                                <option>
+                                selected
                             </#if>
-                        <#else>
-                            <option>
                         </#if>
-                            ${volt.name}
-                        </option>
+                        ></option>
                     </#list>
                 </select>
             </div>
@@ -73,17 +69,13 @@
                 <label>Категория надёжности: </label>
                 <select id="safe" label="Категория надёжности" class="form-control" name="safe">
                     <#list safes as safe>
+                        <option value="${safe.id}" label="${safe.name}"
                         <#if demand??>
                             <#if safe.name==demand.safe.name>
-                                <option selected>
-                            <#else>
-                                <option>
+                                selected
                             </#if>
-                        <#else>
-                            <option>
                         </#if>
-                                ${safe.name}
-                        </option>
+                        ></option>
                     </#list>
                 </select>
             </div>

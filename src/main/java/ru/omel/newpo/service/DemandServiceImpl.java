@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import ru.omel.newpo.entity.DemandEntity;
 import ru.omel.newpo.entity.UserEntity;
 import ru.omel.newpo.repository.DemandRepository;
-import ru.omel.newpo.repository.HistoryRepository;
 import ru.omel.newpo.repository.SafeRepository;
 import ru.omel.newpo.repository.VoltRepository;
 
@@ -32,9 +31,40 @@ public class DemandServiceImpl implements DemandService {
     }
 
     @Override
-    public boolean saveDemand(DemandEntity demand) throws ValidationException {
-        demandRepository.save(demand);
-        return true;
+    public void saveDemand(DemandEntity demand) throws ValidationException {
+        String history = new String();
+
+        DemandEntity oldDemand = findById(demand.getId());
+            if(!oldDemand.getObject().equals(demand.getObject()))
+                history += "Объект с '" + oldDemand.getObject() +
+                        "' на '" + demand.getObject() + "'. ";
+            if(!oldDemand.getAdress().equals(demand.getAdress()))
+                history += "Адрес с '" + oldDemand.getAdress() +
+                        "' на '" + demand.getAdress() + "'. ";
+            if(!oldDemand.getPowerCur().equals(demand.getPowerCur()))
+                history += "Мощность текущая с '" + oldDemand.getPowerCur().toString() +
+                        "' на '" + demand.getPowerCur().toString() + "'. ";
+            if(!oldDemand.getPowerDec().equals(demand.getPowerDec()))
+                history += "Мощность требуемая с '" + oldDemand.getPowerDec().toString() +
+                        "' на '" + demand.getPowerDec().toString() + "'. ";
+            if(!oldDemand.getVolt().equals(demand.getVolt()))
+                history += "Класс напряжения с '" + oldDemand.getVolt().getName() +
+                        "' на '" + demand.getVolt().getName() + "'. ";
+            if(!oldDemand.getSafe().equals(demand.getSafe()))
+                history += "Категория надёжности с '" + oldDemand.getSafe().getName() +
+                        "' на '" + demand.getSafe().getName() + "'.";
+        if(!history.isEmpty()){
+            demand.setUser(oldDemand.getUser());
+            demand.setCreateDate(oldDemand.getCreateDate());
+            demand.setLoad1c(oldDemand.getLoad1c());
+            demand.setRewrite(true);
+            try {
+                historyService.saveHistory(history, demand);
+                demandRepository.save(demand);
+            } catch (DataAccessException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -53,8 +83,9 @@ public class DemandServiceImpl implements DemandService {
         return demandEntity.get();
     }
 
+/*
     @Override
-    public boolean saveDemand(Long id,
+    public void saveDemand(Long id,
                               String object,
                               String adress,
                               Double powerCur,
@@ -88,7 +119,7 @@ public class DemandServiceImpl implements DemandService {
                         history += "Категория надёжности с '" + demandEntity.getSafe().getName() +
                                 "' на '" + safeRepository.findByName(safe).getName() + "'.";
                 }
-            if(history!=""){
+            if(!history.isEmpty()){
                 demandEntity.setObject(object);
                 demandEntity.setAdress(adress);
                 demandEntity.setPowerCur(powerCur);
@@ -102,24 +133,17 @@ public class DemandServiceImpl implements DemandService {
                     demandRepository.save(demandEntity);
                     return true;
                 } catch (DataAccessException e) {
-                    return false;
+                    e.printStackTrace();
                 }
             }
         }
-        else
-            return false;
-        return false;
+        return demandEntity;
     }
 
     @Override
     public DemandEntity newDemand(String object, String adress, Double powerCur, Double powerDec, String volt, String safe, UserEntity user) {
 
         DemandEntity demandEntity = new DemandEntity();
-        /*
-        Long id = demandRepository.maxId() + 1;
-        demandEntity.setId(id);
-
-         */
         demandEntity.setCreateDate(new Date());
         demandEntity.setObject(object);
         demandEntity.setAdress(adress);
@@ -130,6 +154,17 @@ public class DemandServiceImpl implements DemandService {
         demandEntity.setUser(user);
         demandEntity.setLoad1c(false);
         demandEntity.setRewrite(true);
+        demandRepository.save(demandEntity);
+        historyService.saveHistory("Новый запрос: " + demandEntity.forHistory(), demandEntity);
+        return demandEntity;
+    }
+
+*/
+    public DemandEntity newDemand(DemandEntity demandEntity, UserEntity user){
+        demandEntity.setCreateDate(new Date());
+        demandEntity.setUser(user);
+        demandEntity.setLoad1c(false);
+        demandEntity.setRewrite(false);
         demandRepository.save(demandEntity);
         historyService.saveHistory("Новый запрос: " + demandEntity.forHistory(), demandEntity);
         return demandEntity;

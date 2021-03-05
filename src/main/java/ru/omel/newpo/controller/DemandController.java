@@ -5,9 +5,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.omel.newpo.entity.*;
+import ru.omel.newpo.repository.DemandRepository;
 import ru.omel.newpo.repository.FileRepository;
 import ru.omel.newpo.service.*;
 
@@ -21,7 +23,8 @@ import java.util.*;
 public class DemandController {
     @Autowired
     private DemandService demandService;
-    //private final DemandRepository demandRepository;
+    @Autowired
+    private DemandRepository demandRepository;
     @Autowired
     private SafeService safeService;
     @Autowired
@@ -47,8 +50,13 @@ public class DemandController {
     }
 
     @GetMapping("/demand/{id}")
-    public String edit(Model model, @PathVariable("id") Long id){
+    public String edit(@AuthenticationPrincipal UserEntity user,
+                       Model model,
+                       @PathVariable("id") Long id) {
         DemandEntity demandEntity = demandService.findById(id);
+        if(!demandEntity.getUser().getId().equals(user.getId())) {
+            return "redirect:/";
+        }
         List<SafeEntity> safeEntities = safeService.findAll();
         List<VoltEntity> voltEntities = voltService.findAll();
         List<FileEntity> fileEntities = fileService.findAllByDemand(demandEntity);
@@ -64,13 +72,8 @@ public class DemandController {
 
     @PostMapping("/demand/{id}")
     public String saveEdit(@AuthenticationPrincipal UserEntity user,
-                           @RequestParam Long id,
-                           @RequestParam String object,
-                           @RequestParam String adress,
-                           @RequestParam(defaultValue = "0.0") Double powerCur,
-                           @RequestParam(defaultValue = "0.0") Double powerDec,
-                           @RequestParam String volt,
-                           @RequestParam String safe,
+                           @Valid DemandEntity demandEntity,
+                           BindingResult bindingResult,
                            @RequestParam(name = "file1", required = false) MultipartFile file1,
                            @RequestParam(name = "file2", required = false) MultipartFile file2,
                            @RequestParam(name = "file3", required = false) MultipartFile file3,
@@ -80,35 +83,34 @@ public class DemandController {
                            @RequestParam(name = "file7", required = false) MultipartFile file7,
                            @RequestParam(name = "file8", required = false) MultipartFile file8,
                            @RequestParam(name = "file9", required = false) MultipartFile file9,
-                           @RequestParam(name = "file10", required = false) MultipartFile file10){
-        demandService.saveDemand(id, object, adress, powerCur, powerDec, volt, safe, user);
-        DemandEntity demandEntity = demandService.findById(id);
-        if(file1!=null && !file1.isEmpty()){
-            try { saveFile(demandEntity, file1);} catch (IOException | ValidationException e) {}}
-        if(file2!=null && !file2.isEmpty()){
-            try { saveFile(demandEntity, file2);} catch (IOException | ValidationException e) {}}
-        if(file3!=null && !file3.isEmpty()){
-            try { saveFile(demandEntity, file3);} catch (IOException | ValidationException e) {}}
-        if(file4!=null && !file4.isEmpty()){
-            try { saveFile(demandEntity, file4);} catch (IOException | ValidationException e) {}}
-        if(file5!=null && !file5.isEmpty()){
-            try { saveFile(demandEntity, file5);} catch (IOException | ValidationException e) {}}
-        if(file6!=null && !file6.isEmpty()){
-            try { saveFile(demandEntity, file6);} catch (IOException | ValidationException e) {}}
-        if(file7!=null && !file7.isEmpty()){
-            try { saveFile(demandEntity, file7);} catch (IOException | ValidationException e) {}}
-        if(file8!=null && !file8.isEmpty()){
-            try { saveFile(demandEntity, file8);} catch (IOException | ValidationException e) {}}
-        if(file9!=null && !file9.isEmpty()){
-            try { saveFile(demandEntity, file9);} catch (IOException | ValidationException e) {}}
-        if(file10!=null && !file10.isEmpty()){
-            try { saveFile(demandEntity, file10);} catch (IOException | ValidationException e) {}}
+                           @RequestParam(name = "file10", required = false) MultipartFile file10) throws ValidationException {
+        if (bindingResult.hasErrors()) {
+            return "redirect:/demand/" + demandEntity.getId();
+        }
+        try {
+            demandService.saveDemand(demandEntity);
+            saveFile(demandEntity, file1);
+            saveFile(demandEntity, file2);
+            saveFile(demandEntity, file3);
+            saveFile(demandEntity, file4);
+            saveFile(demandEntity, file5);
+            saveFile(demandEntity, file6);
+            saveFile(demandEntity, file7);
+            saveFile(demandEntity, file8);
+            saveFile(demandEntity, file9);
+            saveFile(demandEntity, file10);
+        } catch (IOException | ValidationException e) {
+            e.printStackTrace();
+        }
         return "redirect:/";
     }
 
-    private void saveFile(@Valid DemandEntity demand,
-                          MultipartFile file) throws IOException, ValidationException {
+    private void saveFile(DemandEntity demand,
+                          MultipartFile file) throws IOException {
         String uploadPath, osName;
+
+        try {
+        if(file == null || file.isEmpty()) return ;
         uploadPath = new String();
         osName = System.getProperty("os.name");
         if(osName.contains("Windows")) uploadPath = uploadPathWindows;
@@ -140,6 +142,9 @@ public class DemandController {
             demand.setRewrite(true);
             demandService.saveDemand(demand);
         }
+        } catch (IOException | ValidationException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -156,12 +161,7 @@ public class DemandController {
     @PostMapping("/new")
     public String saveNewDemand(Model model,
                            @AuthenticationPrincipal UserEntity user,
-                           @RequestParam String object,
-                           @RequestParam String adress,
-                           @RequestParam Double powerCur,
-                           @RequestParam Double powerDec,
-                           @RequestParam String volt,
-                           @RequestParam String safe,
+                           @Valid DemandEntity demandEntity,
                            @RequestParam(name = "file1", required = false) MultipartFile file1,
                            @RequestParam(name = "file2", required = false) MultipartFile file2,
                            @RequestParam(name = "file3", required = false) MultipartFile file3,
@@ -172,28 +172,21 @@ public class DemandController {
                            @RequestParam(name = "file8", required = false) MultipartFile file8,
                            @RequestParam(name = "file9", required = false) MultipartFile file9,
                            @RequestParam(name = "file10", required = false) MultipartFile file10){
-        DemandEntity demandEntity = new DemandEntity();
-        demandEntity = demandService.newDemand(object, adress, powerCur, powerDec, volt, safe, user);
-        if(file1!=null && !file1.isEmpty()){
-            try { saveFile(demandEntity, file1);} catch (IOException | ValidationException e) {}}
-        if(file2!=null && !file2.isEmpty()){
-            try { saveFile(demandEntity, file2);} catch (IOException | ValidationException e) {}}
-        if(file3!=null && !file3.isEmpty()){
-            try { saveFile(demandEntity, file3);} catch (IOException | ValidationException e) {}}
-        if(file4!=null && !file4.isEmpty()){
-            try { saveFile(demandEntity, file4);} catch (IOException | ValidationException e) {}}
-        if(file5!=null && !file5.isEmpty()){
-            try { saveFile(demandEntity, file5);} catch (IOException | ValidationException e) {}}
-        if(file6!=null && !file6.isEmpty()){
-            try { saveFile(demandEntity, file6);} catch (IOException | ValidationException e) {}}
-        if(file7!=null && !file7.isEmpty()){
-            try { saveFile(demandEntity, file7);} catch (IOException | ValidationException e) {}}
-        if(file8!=null && !file8.isEmpty()){
-            try { saveFile(demandEntity, file8);} catch (IOException | ValidationException e) {}}
-        if(file9!=null && !file9.isEmpty()){
-            try { saveFile(demandEntity, file9);} catch (IOException | ValidationException e) {}}
-        if(file10!=null && !file10.isEmpty()){
-            try { saveFile(demandEntity, file10);} catch (IOException | ValidationException e) {}}
+        try {
+            demandService.newDemand(demandEntity, user);
+            saveFile(demandEntity, file1);
+            saveFile(demandEntity, file2);
+            saveFile(demandEntity, file3);
+            saveFile(demandEntity, file4);
+            saveFile(demandEntity, file5);
+            saveFile(demandEntity, file6);
+            saveFile(demandEntity, file7);
+            saveFile(demandEntity, file8);
+            saveFile(demandEntity, file9);
+            saveFile(demandEntity, file10);
+        } catch (IOException | ValidationException e) {
+            e.printStackTrace();
+        }
         return "redirect:/";
     }
 
