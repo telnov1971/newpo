@@ -24,7 +24,17 @@ public class DemandController {
     @Autowired
     private DemandService demandService;
     @Autowired
-    private DemandRepository demandRepository;
+    private GarantService garantService;
+    @Autowired
+    private PlanService planService;
+    @Autowired
+    private PriceService priceService;
+    @Autowired
+    private RegionService regionService;
+    @Autowired
+    private SendService sendService;
+    @Autowired
+    private StatusService statusService;
     @Autowired
     private SafeService safeService;
     @Autowired
@@ -57,11 +67,23 @@ public class DemandController {
         if(!demandEntity.getUser().getId().equals(user.getId())) {
             return "redirect:/";
         }
+        List<GarantEntity> garantEntities = garantService.findAll();
+        List<PlanEntity> planEntities = planService.findAll();
+        List<PriceEntity> priceEntities = priceService.findAll();
+        List<RegionEntity> regionEntities = regionService.findAll();
+        List<SendEntity> sendEntities = sendService.findAll();
+        List<StatusEntity> statusEntities = statusService.findAll();
         List<SafeEntity> safeEntities = safeService.findAll();
         List<VoltEntity> voltEntities = voltService.findAll();
         List<FileEntity> fileEntities = fileService.findAllByDemand(demandEntity);
         List<HistoryEntity> historyEntities = historyService.findAllByDemand(demandEntity);
         model.addAttribute("demand", demandEntity);
+        model.addAttribute("garant", garantEntities);
+        model.addAttribute("plan", planEntities);
+        model.addAttribute("price", priceEntities);
+        model.addAttribute("region", regionEntities);
+        model.addAttribute("send", sendEntities);
+        model.addAttribute("status", statusEntities);
         model.addAttribute("safes", safeEntities);
         model.addAttribute("volts", voltEntities);
         model.addAttribute("files",fileEntities);

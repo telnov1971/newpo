@@ -34,7 +34,7 @@ public class DemandEntity {
     private StatusEntity status;
 
     // заявитель
-    @Column(name = "declarant", nullable = false)
+    @Column(name = "declarant")
     private String declarant;
 
     // контактный телефон

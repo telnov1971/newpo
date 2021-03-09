@@ -9,9 +9,24 @@
                 new
             </#if>"
               method="post" enctype="multipart/form-data">
+            <#if demand??>
+                <label>${demand.createDate}</label>
+            </#if>
+
             <div class="form-group">
                 <label>Объект: </label>
-                <input type="text" class="form-control ${(objectError??)?string('is-invalid', '')}"
+                <input type="textarea" class="form-control ${(objectError??)?string('is-invalid', '')}"
+                       value="<#if demand??>${demand.declarant}</#if>" name="declarant" placeholder="Заявитель" />
+                <#if textError??>
+                    <div class="invalid-feedback">
+                        ${objectError}
+                    </div>
+                </#if>
+            </div>
+
+            <div class="form-group">
+                <label>Объект: </label>
+                <input type="textarea" class="form-control ${(objectError??)?string('is-invalid', '')}"
                        value="<#if demand??>${demand.object}</#if>" name="object" placeholder="Объект" />
                 <#if textError??>
                     <div class="invalid-feedback">
@@ -21,7 +36,7 @@
             </div>
             <div class="form-group">
                 <label>Адрес: </label>
-                <input type="text" class="form-control"
+                <input type="textarea" class="form-control"
                        value="<#if demand??>${demand.adress}</#if>" name="adress" placeholder="Адресс" />
                 <#if adressError??>
                     <div class="invalid-feedback">
