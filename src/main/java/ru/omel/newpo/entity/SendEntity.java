@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "safe")
-public class SafeEntity {
+@Table(name = "send")
+public class SendEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,19 +17,15 @@ public class SafeEntity {
     @Column(name = "code")
     private String code;
 
-    @OneToMany(mappedBy = "safe")
+    @OneToMany(mappedBy = "send")
     private Set<DemandEntity> demands = new HashSet<>();
 
-    SafeEntity(String name, String code){
+    public SendEntity(String name, String code) {
         this.name = name;
         this.code = code;
     }
 
-    public SafeEntity() {
-    }
-
-    SafeEntity(String name){
-        this.name = name;
+    public SendEntity() {
     }
 
     public Long getId() {

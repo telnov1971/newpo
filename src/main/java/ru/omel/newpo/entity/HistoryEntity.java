@@ -9,7 +9,7 @@ import java.util.Date;
 @Table(name = "history")
 public class HistoryEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Temporal(TemporalType.DATE)

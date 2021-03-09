@@ -9,33 +9,122 @@ import java.util.Set;
 @Table(name = "demand")
 public class DemandEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // дата создания
     @Temporal(TemporalType.DATE)
     @Column(name = "create_date")
     private Date createDate;
+    // дата закрытия
+    @Temporal(TemporalType.DATE)
+    @Column(name = "due_date")
+    private Date dueDate;
+    // дата последнего изменения
+    @Temporal(TemporalType.DATE)
+    @Column(name = "mod_date")
+    private Date modDate;
 
+    // кем изменено
+    private Boolean update1c;
+
+    // статус
+    @ManyToOne
+    @JoinColumn(name = "status_id")
+    private StatusEntity status;
+
+    // заявитель
+    @Column(name = "declarant", nullable = false)
+    private String declarant;
+
+    // контактный телефон
+    @Column(name = "contact")
+    private String contact;
+
+    // реквизиты заявителя
+    @Column(name = "requisite")
+    private String requisite;
+
+    // Юридический адрес заявителя
+    @Column(name = "adress_ur")
+    private String adressUr;
+
+    // Фактический адрес заявителя
+    @Column(name = "adress_fact")
+    private String adressFact;
+
+    // объект
     @Column(name = "object", nullable = false)
     private String Object;
 
+    // адрес объекта
     @Column(name = "adress")
     private String adress;
 
+    // зона ответственности
+    @ManyToOne
+    @JoinColumn(name = "region_id", nullable = false)
+    private RegionEntity region;
+
+    // описание
+    @Column(name = "description")
+    private String description;
+
+    // мощность текущая
     @Column(name = "powcur")
     private Double powerCur;
 
+    // мощность заявляемая
     @Column(name = "powdec")
     private Double powerDec;
 
+    // мощность максимальная
+    @Column(name = "powmax")
+    private Double powerMax;
+
+    // уровень напряжнения
     @ManyToOne
     @JoinColumn(name = "volt_id")
     private VoltEntity volt;
 
+    // категория надёжности
     @ManyToOne
     @JoinColumn(name = "safe_id")
     private SafeEntity safe;
 
+    // сумма договора
+    @Column(name = "sum")
+    private Double sum;
+
+    // Получить проект договора
+    @ManyToOne
+    @JoinColumn(name = "send_id")
+    private SendEntity send;
+
+    // Рассрочка платежа -> list
+    @ManyToOne
+    @JoinColumn(name = "plan_id")
+    private PlanEntity plan;
+
+    // СОГЛАСИЕ НА ОБРАБОТКУ ДАННЫХ -> Bool
+    @Column(name = "consent")
+    private Boolean consent;
+
+    // Типовой договор -> url
+    @Column(name = "contract")
+    private String contract;
+
+    // Ценовая категория - > list
+    @ManyToOne
+    @JoinColumn(name = "price_id")
+    private PriceEntity price;
+
+    // гарантирующий поставщик -> list
+    @ManyToOne
+    @JoinColumn(name = "garant_id")
+    private GarantEntity garant;
+
+    // пользователь
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private UserEntity user;
