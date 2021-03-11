@@ -6,10 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.omel.newpo.entity.DemandEntity;
 import ru.omel.newpo.entity.UserEntity;
 import ru.omel.newpo.repository.DemandRepository;
-import ru.omel.newpo.repository.SafeRepository;
-import ru.omel.newpo.repository.VoltRepository;
 
-import javax.xml.bind.ValidationException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -17,46 +14,32 @@ import java.util.Optional;
 @Service
 public class DemandServiceImpl implements DemandService {
 
-    private VoltRepository voltRepository;
-    private SafeRepository safeRepository;
-    private DemandRepository demandRepository;
-    private HistoryService historyService;
+    private final StatusService statusService;
+    private final DemandRepository demandRepository;
+    private final HistoryService historyService;
 
     @Autowired
-    public DemandServiceImpl(VoltRepository voltRepository, SafeRepository safeRepository, DemandRepository demandRepository, HistoryService historyService) {
-        this.voltRepository = voltRepository;
-        this.safeRepository = safeRepository;
+    public DemandServiceImpl(DemandRepository demandRepository
+            , HistoryService historyService
+            , StatusService statusService) {
+        this.statusService = statusService;
         this.demandRepository = demandRepository;
         this.historyService = historyService;
     }
 
     @Override
-    public void saveDemand(DemandEntity demand) throws ValidationException {
-        String history = new String();
-
+    public void saveDemand(DemandEntity demand) {
         DemandEntity oldDemand = findById(demand.getId());
-            if(!oldDemand.getObject().equals(demand.getObject()))
-                history += "Объект с '" + oldDemand.getObject() +
-                        "' на '" + demand.getObject() + "'. ";
-            if(!oldDemand.getAdress().equals(demand.getAdress()))
-                history += "Адрес с '" + oldDemand.getAdress() +
-                        "' на '" + demand.getAdress() + "'. ";
-            if(!oldDemand.getPowerCur().equals(demand.getPowerCur()))
-                history += "Мощность текущая с '" + oldDemand.getPowerCur().toString() +
-                        "' на '" + demand.getPowerCur().toString() + "'. ";
-            if(!oldDemand.getPowerDec().equals(demand.getPowerDec()))
-                history += "Мощность требуемая с '" + oldDemand.getPowerDec().toString() +
-                        "' на '" + demand.getPowerDec().toString() + "'. ";
-            if(!oldDemand.getVolt().equals(demand.getVolt()))
-                history += "Класс напряжения с '" + oldDemand.getVolt().getName() +
-                        "' на '" + demand.getVolt().getName() + "'. ";
-            if(!oldDemand.getSafe().equals(demand.getSafe()))
-                history += "Категория надёжности с '" + oldDemand.getSafe().getName() +
-                        "' на '" + demand.getSafe().getName() + "'.";
+        String history = history(demand, oldDemand);
         if(!history.isEmpty()){
             demand.setUser(oldDemand.getUser());
             demand.setCreateDate(oldDemand.getCreateDate());
+            demand.setDueDate(oldDemand.getDueDate());
+            demand.setModDate(new Date());
+            demand.setStatus(oldDemand.getStatus());
+            demand.setContract(oldDemand.getContract());
             demand.setLoad1c(oldDemand.getLoad1c());
+            demand.setUpdate1c(false);
             demand.setRewrite(true);
             try {
                 historyService.saveHistory(history, demand);
@@ -65,6 +48,69 @@ public class DemandServiceImpl implements DemandService {
                 e.printStackTrace();
             }
         }
+    }
+
+    private String history(DemandEntity demand, DemandEntity oldDemand){
+        String history = "";
+        if(!oldDemand.getObject().equals(demand.getObject()))
+            history += "Объект с '" + oldDemand.getObject() +
+                    "' на '" + demand.getObject() + "'. ";
+        if(!oldDemand.getAdress().equals(demand.getAdress()))
+            history += "Адрес объекта с '" + oldDemand.getAdress() +
+                    "' на '" + demand.getAdress() + "'. ";
+        if(!oldDemand.getDeclarant().equals(demand.getDeclarant()))
+            history += "Заявитель с '" + oldDemand.getDeclarant() +
+                    "' на '" + demand.getDeclarant() + "'. ";
+        if(!oldDemand.getContact().equals(demand.getContact()))
+            history += "Контактный номер с '" + oldDemand.getContact() +
+                    "' на '" + demand.getContact() + "'. ";
+        if(!oldDemand.getRequisite().equals(demand.getRequisite()))
+            history += "Реквизиты заявителя с '" + oldDemand.getRequisite() +
+                    "' на '" + demand.getRequisite() + "'. ";
+        if(!oldDemand.getAdressUr().equals(demand.getAdressUr()))
+            history += "Юридический адрес объекта с '" + oldDemand.getAdressUr() +
+                    "' на '" + demand.getAdressUr() + "'. ";
+        if(!oldDemand.getAdressFact().equals(demand.getAdressFact()))
+            history += "Фактический  адрес объекта с '" + oldDemand.getAdressFact() +
+                    "' на '" + demand.getAdressFact() + "'. ";
+        if(!oldDemand.getDescription().equals(demand.getDescription()))
+            history += "Пояснения с '" + oldDemand.getDescription() +
+                    "' на '" + demand.getDescription() + "'. ";
+
+
+        if(!oldDemand.getPowerCur().equals(demand.getPowerCur()))
+            history += "Мощность текущая с '" + oldDemand.getPowerCur().toString() +
+                    "' на '" + demand.getPowerCur().toString() + "'. ";
+        if(!oldDemand.getPowerDec().equals(demand.getPowerDec()))
+            history += "Мощность требуемая с '" + oldDemand.getPowerDec().toString() +
+                    "' на '" + demand.getPowerDec().toString() + "'. ";
+        if(!oldDemand.getPowerMax().equals(demand.getPowerMax()))
+            history += "Мощность максимальная с '" + oldDemand.getPowerMax().toString() +
+                    "' на '" + demand.getPowerMax().toString() + "'. ";
+
+        if(!oldDemand.getVolt().equals(demand.getVolt()))
+            history += "Класс напряжения с '" + oldDemand.getVolt().getName() +
+                    "' на '" + demand.getVolt().getName() + "'. ";
+        if(!oldDemand.getSafe().equals(demand.getSafe()))
+            history += "Категория надёжности с '" + oldDemand.getSafe().getName() +
+                    "' на '" + demand.getSafe().getName() + "'.";
+        if(!oldDemand.getRegion().equals(demand.getRegion()))
+            history += "Зона ответственности с '" + oldDemand.getRegion().getName() +
+                    "' на '" + demand.getRegion().getName() + "'. ";
+        if(!oldDemand.getSend().equals(demand.getSend()))
+            history += "Получение договора с '" + oldDemand.getSend().getName() +
+                    "' на '" + demand.getSend().getName() + "'. ";
+        if(!oldDemand.getPlan().equals(demand.getPlan()))
+            history += "Рассрочка платежа с '" + oldDemand.getPlan().getName() +
+                    "' на '" + demand.getPlan().getName() + "'. ";
+        if(!oldDemand.getPrice().equals(demand.getPrice()))
+            history += "Ценовая категория с '" + oldDemand.getPrice().getName() +
+                    "' на '" + demand.getPrice().getName() + "'. ";
+        if(!oldDemand.getGarant().equals(demand.getGarant()))
+            history += "Гарантирующий поставщик с '" + oldDemand.getGarant().getName() +
+                    "' на '" + demand.getGarant().getName() + "'. ";
+
+        return history;
     }
 
     @Override
@@ -83,88 +129,17 @@ public class DemandServiceImpl implements DemandService {
         return demandEntity.get();
     }
 
-/*
-    @Override
-    public void saveDemand(Long id,
-                              String object,
-                              String adress,
-                              Double powerCur,
-                              Double powerDec,
-                              String volt,
-                              String safe,
-                              UserEntity user) {
-        String history = new String();
-        DemandEntity demandEntity;
-        Optional<DemandEntity> demandEntityOptional = demandRepository.findById(id);
-        if(!demandEntityOptional.isEmpty()) {
-            demandEntity = demandEntityOptional.get();
-            if (!demandEntityOptional.isEmpty()) {
-                demandEntity = demandEntityOptional.get();
-                if(!demandEntity.getObject().equals(object))
-                    history += "Объект с '" + demandEntity.getObject() +
-                                "' на '" + object + "'. ";
-                if(!demandEntity.getAdress().equals(adress))
-                    history += "Адрес с '" + demandEntity.getAdress() +
-                                "' на '" + adress + "'. ";
-                if(!demandEntity.getPowerCur().equals(powerCur))
-                    history += "Мощность текущая с '" + demandEntity.getPowerCur().toString() +
-                                "' на '" + powerCur.toString() + "'. ";
-                if(!demandEntity.getPowerDec().equals(powerDec))
-                    history += "Мощность требуемая с '" + demandEntity.getPowerDec().toString() +
-                                "' на '" + powerDec.toString() + "'. ";
-                if(!demandEntity.getVolt().equals(voltRepository.findByName(volt)))
-                    history += "Класс напряжения с '" + demandEntity.getVolt().getName() +
-                                "' на '" + voltRepository.findByName(volt).getName() + "'. ";
-                if(!demandEntity.getSafe().equals(safeRepository.findByName(safe)))
-                        history += "Категория надёжности с '" + demandEntity.getSafe().getName() +
-                                "' на '" + safeRepository.findByName(safe).getName() + "'.";
-                }
-            if(!history.isEmpty()){
-                demandEntity.setObject(object);
-                demandEntity.setAdress(adress);
-                demandEntity.setPowerCur(powerCur);
-                demandEntity.setPowerDec(powerDec);
-                demandEntity.setVolt(voltRepository.findByName(volt));
-                demandEntity.setSafe(safeRepository.findByName(safe));
-                demandEntity.setUser(user);
-                demandEntity.setRewrite(true);
-                try {
-                    historyService.saveHistory(history, demandEntity);
-                    demandRepository.save(demandEntity);
-                    return true;
-                } catch (DataAccessException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return demandEntity;
-    }
-
-    @Override
-    public DemandEntity newDemand(String object, String adress, Double powerCur, Double powerDec, String volt, String safe, UserEntity user) {
-
-        DemandEntity demandEntity = new DemandEntity();
-        demandEntity.setCreateDate(new Date());
-        demandEntity.setObject(object);
-        demandEntity.setAdress(adress);
-        demandEntity.setPowerCur(powerCur);
-        demandEntity.setPowerDec(powerDec);
-        demandEntity.setVolt(voltRepository.findByName(volt));
-        demandEntity.setSafe(safeRepository.findByName(safe));
-        demandEntity.setUser(user);
-        demandEntity.setLoad1c(false);
-        demandEntity.setRewrite(true);
-        demandRepository.save(demandEntity);
-        historyService.saveHistory("Новый запрос: " + demandEntity.forHistory(), demandEntity);
-        return demandEntity;
-    }
-
-*/
     public DemandEntity newDemand(DemandEntity demandEntity, UserEntity user){
         demandEntity.setCreateDate(new Date());
         demandEntity.setUser(user);
+        demandEntity.setStatus(statusService.findById((long) 1));
         demandEntity.setLoad1c(false);
         demandEntity.setRewrite(false);
+        demandEntity.setModDate(new Date());
+        demandEntity.setContract("http://omskelectro.ru");
+        demandEntity.setUpdate1c(false);
+        demandEntity.setConsent(true);
+
         demandRepository.save(demandEntity);
         historyService.saveHistory("Новый запрос: " + demandEntity.forHistory(), demandEntity);
         return demandEntity;

@@ -9,7 +9,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.omel.newpo.entity.*;
-import ru.omel.newpo.repository.DemandRepository;
 import ru.omel.newpo.repository.FileRepository;
 import ru.omel.newpo.service.*;
 
@@ -21,39 +20,55 @@ import java.util.*;
 
 @Controller
 public class DemandController {
-    @Autowired
-    private DemandService demandService;
-    @Autowired
-    private GarantService garantService;
-    @Autowired
-    private PlanService planService;
-    @Autowired
-    private PriceService priceService;
-    @Autowired
-    private RegionService regionService;
-    @Autowired
-    private SendService sendService;
-    @Autowired
-    private StatusService statusService;
-    @Autowired
-    private SafeService safeService;
-    @Autowired
-    private VoltService voltService;
-    @Autowired
-    private HistoryService historyService;
-    @Autowired
-    private FileService fileService;
-    @Autowired
-    private FileRepository fileRepository;
+    private final DemandService demandService;
+    private final GarantService garantService;
+    private final PlanService planService;
+    private final PriceService priceService;
+    private final RegionService regionService;
+    private final SendService sendService;
+    private final StatusService statusService;
+    private final SafeService safeService;
+    private final VoltService voltService;
+    private final HistoryService historyService;
+    private final FileService fileService;
+    private final FileRepository fileRepository;
     @Value("${upload.path.windows}")
     private String uploadPathWindows;
     @Value("${upload.path.linux}")
     private String uploadPathLinux;
 
+    @Autowired
+    public DemandController(DemandService demandService
+            , GarantService garantService
+            , PlanService planService
+            , PriceService priceService
+            , RegionService regionService
+            , SendService sendService
+            , StatusService statusService
+            , SafeService safeService
+            , VoltService voltService
+            , HistoryService historyService
+            , FileService fileService
+            , FileRepository fileRepository
+            ) {
+        this.demandService = demandService;
+        this.garantService = garantService;
+        this.planService = planService;
+        this.priceService = priceService;
+        this.regionService = regionService;
+        this.sendService = sendService;
+        this.statusService = statusService;
+        this.safeService = safeService;
+        this.voltService = voltService;
+        this.historyService = historyService;
+        this.fileService = fileService;
+        this.fileRepository = fileRepository;
+    }
+
     @GetMapping("/")
     public String main(Model model,
                        @AuthenticationPrincipal UserEntity user){
-        List<DemandEntity> demandEntities = demandService.findAllByUser(user);
+        var demandEntities = demandService.findAllByUser(user);
         model.addAttribute("url", "/main");
         model.addAttribute("demands", demandEntities);
         return "main";
@@ -67,26 +82,27 @@ public class DemandController {
         if(!demandEntity.getUser().getId().equals(user.getId())) {
             return "redirect:/";
         }
-        List<GarantEntity> garantEntities = garantService.findAll();
-        List<PlanEntity> planEntities = planService.findAll();
-        List<PriceEntity> priceEntities = priceService.findAll();
-        List<RegionEntity> regionEntities = regionService.findAll();
-        List<SendEntity> sendEntities = sendService.findAll();
-        List<StatusEntity> statusEntities = statusService.findAll();
         List<SafeEntity> safeEntities = safeService.findAll();
         List<VoltEntity> voltEntities = voltService.findAll();
+        List<GarantEntity> garantEntities = garantService.findAll();
+        List<PriceEntity> priceEntities = priceService.findAll();
+        List<PlanEntity> planEntities = planService.findAll();
+        List<SendEntity> sendEntities = sendService.findAll();
+        List<StatusEntity> statusEntities = statusService.findAll();
+        List<RegionEntity> regionEntities = regionService.findAll();
         List<FileEntity> fileEntities = fileService.findAllByDemand(demandEntity);
         List<HistoryEntity> historyEntities = historyService.findAllByDemand(demandEntity);
+        model.addAttribute("garants", garantEntities);
+        model.addAttribute("prices", priceEntities);
+        model.addAttribute("plans", planEntities);
+        model.addAttribute("sends",sendEntities);
+        model.addAttribute("statuses",statusEntities);
+        model.addAttribute("regions", regionEntities);
         model.addAttribute("demand", demandEntity);
-        model.addAttribute("garant", garantEntities);
-        model.addAttribute("plan", planEntities);
-        model.addAttribute("price", priceEntities);
-        model.addAttribute("region", regionEntities);
-        model.addAttribute("send", sendEntities);
-        model.addAttribute("status", statusEntities);
         model.addAttribute("safes", safeEntities);
         model.addAttribute("volts", voltEntities);
         model.addAttribute("files",fileEntities);
+        model.addAttribute("user", user);
         model.addAttribute("history", historyEntities);
         return "demand";
     }
@@ -139,7 +155,7 @@ public class DemandController {
         if(osName.contains("Linux")) uploadPath = uploadPathLinux;
 
         FileEntity fileEntity = new FileEntity();
-        if (file != null && !file.getOriginalFilename().isEmpty()) {
+        if (!file.getOriginalFilename().isEmpty()) {
             File uploadDir = new File(uploadPath);
             String file1, file2 = "";
 
@@ -175,13 +191,25 @@ public class DemandController {
                             @AuthenticationPrincipal UserEntity user){
         List<SafeEntity> safeEntities = safeService.findAll();
         List<VoltEntity> voltEntities = voltService.findAll();
+        List<GarantEntity> garantEntities = garantService.findAll();
+        List<PriceEntity> priceEntities = priceService.findAll();
+        List<PlanEntity> planEntities = planService.findAll();
+        List<SendEntity> sendEntities = sendService.findAll();
+        List<StatusEntity> statusEntities = statusService.findAll();
+        List<RegionEntity> regionEntities = regionService.findAll();
         model.addAttribute("safes", safeEntities);
         model.addAttribute("volts", voltEntities);
+        model.addAttribute("garants", garantEntities);
+        model.addAttribute("prices", priceEntities);
+        model.addAttribute("plans", planEntities);
+        model.addAttribute("sends",sendEntities);
+        model.addAttribute("statuses",statusEntities);
+        model.addAttribute("regions", regionEntities);
         return "demand";
     }
 
     @PostMapping("/new")
-    public String saveNewDemand(Model model,
+    public String saveNewDemand(
                            @AuthenticationPrincipal UserEntity user,
                            @Valid DemandEntity demandEntity,
                            @RequestParam(name = "file1", required = false) MultipartFile file1,

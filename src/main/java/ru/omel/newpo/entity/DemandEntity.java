@@ -129,6 +129,9 @@ public class DemandEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    @OneToMany(mappedBy = "demand", cascade = CascadeType.ALL)
+    private Set<HistoryEntity> history = new HashSet<>();
+
     //загружено в 1С
     private Boolean load1c;
     //обновлено
@@ -150,6 +153,78 @@ public class DemandEntity {
         this.createDate = createDate;
     }
 
+    public Date getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public Date getModDate() {
+        return modDate;
+    }
+
+    public void setModDate(Date modDate) {
+        this.modDate = modDate;
+    }
+
+    public Boolean getUpdate1c() {
+        return update1c;
+    }
+
+    public void setUpdate1c(Boolean update1c) {
+        this.update1c = update1c;
+    }
+
+    public StatusEntity getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusEntity status) {
+        this.status = status;
+    }
+
+    public String getDeclarant() {
+        return declarant;
+    }
+
+    public void setDeclarant(String declarant) {
+        this.declarant = declarant;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+    public String getRequisite() {
+        return requisite;
+    }
+
+    public void setRequisite(String requisite) {
+        this.requisite = requisite;
+    }
+
+    public String getAdressUr() {
+        return adressUr;
+    }
+
+    public void setAdressUr(String adressUr) {
+        this.adressUr = adressUr;
+    }
+
+    public String getAdressFact() {
+        return adressFact;
+    }
+
+    public void setAdressFact(String adressFact) {
+        this.adressFact = adressFact;
+    }
+
     public String getObject() {
         return Object;
     }
@@ -164,6 +239,22 @@ public class DemandEntity {
 
     public void setAdress(String adress) {
         this.adress = adress;
+    }
+
+    public RegionEntity getRegion() {
+        return region;
+    }
+
+    public void setRegion(RegionEntity region) {
+        this.region = region;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Double getPowerCur() {
@@ -182,6 +273,14 @@ public class DemandEntity {
         this.powerDec = powerDec;
     }
 
+    public Double getPowerMax() {
+        return powerMax;
+    }
+
+    public void setPowerMax(Double powerMax) {
+        this.powerMax = powerMax;
+    }
+
     public VoltEntity getVolt() {
         return volt;
     }
@@ -198,12 +297,76 @@ public class DemandEntity {
         this.safe = safe;
     }
 
+    public Double getSum() {
+        return sum;
+    }
+
+    public void setSum(Double sum) {
+        this.sum = sum;
+    }
+
+    public SendEntity getSend() {
+        return send;
+    }
+
+    public void setSend(SendEntity send) {
+        this.send = send;
+    }
+
+    public PlanEntity getPlan() {
+        return plan;
+    }
+
+    public void setPlan(PlanEntity plan) {
+        this.plan = plan;
+    }
+
+    public Boolean getConsent() {
+        return consent;
+    }
+
+    public void setConsent(Boolean consent) {
+        this.consent = consent;
+    }
+
+    public String getContract() {
+        return contract;
+    }
+
+    public void setContract(String contract) {
+        this.contract = contract;
+    }
+
+    public PriceEntity getPrice() {
+        return price;
+    }
+
+    public void setPrice(PriceEntity price) {
+        this.price = price;
+    }
+
+    public GarantEntity getGarant() {
+        return garant;
+    }
+
+    public void setGarant(GarantEntity garant) {
+        this.garant = garant;
+    }
+
     public UserEntity getUser() {
         return user;
     }
 
     public void setUser(UserEntity user) {
         this.user = user;
+    }
+
+    public Set<HistoryEntity> getHistory() {
+        return history;
+    }
+
+    public void setHistory(Set<HistoryEntity> history) {
+        this.history = history;
     }
 
     public Boolean getLoad1c() {
@@ -221,17 +384,6 @@ public class DemandEntity {
     public void setRewrite(Boolean rewrite) {
         this.rewrite = rewrite;
     }
-
-    public Set<HistoryEntity> getHistory() {
-        return history;
-    }
-
-    public void setHistory(Set<HistoryEntity> history) {
-        this.history = history;
-    }
-
-    @OneToMany(mappedBy = "demand", cascade = CascadeType.ALL)
-    private Set<HistoryEntity> history = new HashSet<>();
 
     public String forHistory(){
         return "Объект: '" + this.getObject() +

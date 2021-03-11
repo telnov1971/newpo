@@ -10,90 +10,34 @@
             </#if>"
               method="post" enctype="multipart/form-data">
             <#if demand??>
-                <label>${demand.createDate}</label>
+                <label>Дата создания: ${demand.createDate}</label>
             </#if>
 
-            <div class="form-group">
-                <label>Объект: </label>
-                <input type="textarea" class="form-control ${(objectError??)?string('is-invalid', '')}"
-                       value="<#if demand??>${demand.declarant}</#if>" name="declarant" placeholder="Заявитель" />
-                <#if textError??>
-                    <div class="invalid-feedback">
-                        ${objectError}
-                    </div>
-                </#if>
-            </div>
+            <#include "fields/status.ftl" />
 
-            <div class="form-group">
-                <label>Объект: </label>
-                <input type="textarea" class="form-control ${(objectError??)?string('is-invalid', '')}"
-                       value="<#if demand??>${demand.object}</#if>" name="object" placeholder="Объект" />
-                <#if textError??>
-                    <div class="invalid-feedback">
-                        ${objectError}
-                    </div>
-                </#if>
-            </div>
-            <div class="form-group">
-                <label>Адрес: </label>
-                <input type="textarea" class="form-control"
-                       value="<#if demand??>${demand.adress}</#if>" name="adress" placeholder="Адресс" />
-                <#if adressError??>
-                    <div class="invalid-feedback">
-                        ${adressError}
-                    </div>
-                </#if>
-            </div>
-            <div class="form-group">
-                <label>Мощность текущая: </label>
-                <input type="number" class="form-control"
-                       value="<#if demand??>${demand.powerCur}</#if>"
-                       name="powerCur"/>
-                <#if adressError??>
-                    <div class="invalid-feedback">
-                        ${adressError}
-                    </div>
-                </#if>
-            </div>
-            <div class="form-group">
-                <label>Мощность требуемая: </label>
-                <input type="number" class="form-control"
-                       value="<#if demand??>${demand.powerDec}</#if>"
-                       name="powerDec"/>
-                <#if adressError??>
-                    <div class="invalid-feedback">
-                        ${adressError}
-                    </div>
-                </#if>
-            </div>
-            <div class="form-group">
-                <label>Класс напряжения: </label>
-                <select id="volt" label="Класс напряжения" class="form-control" name="volt">
-                    <#list volts as volt>
-                        <option value="${volt.id}" label="${volt.name}"
-                        <#if demand??>
-                            <#if volt.name==demand.volt.name>
-                                selected
-                            </#if>
-                        </#if>
-                        ></option>
-                    </#list>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Категория надёжности: </label>
-                <select id="safe" label="Категория надёжности" class="form-control" name="safe">
-                    <#list safes as safe>
-                        <option value="${safe.id}" label="${safe.name}"
-                        <#if demand??>
-                            <#if safe.name==demand.safe.name>
-                                selected
-                            </#if>
-                        </#if>
-                        ></option>
-                    </#list>
-                </select>
-            </div>
+            <#include "fields/declarant.ftl" />
+            <#include "fields/contact.ftl" />
+            <#include "fields/requisite.ftl" />
+            <#include "fields/adressur.ftl" />
+            <#include "fields/adressfact.ftl" />
+
+            <#include "fields/object.ftl" />
+            <#include "fields/adress.ftl" />
+
+            <#include "fields/powercur.ftl" />
+            <#include "fields/powerdec.ftl" />
+            <#include "fields/powermax.ftl" />
+
+            <#include "fields/volt.ftl" />
+            <#include "fields/safe.ftl" />
+            <#include "fields/region.ftl" />
+
+            <#include "fields/price.ftl" />
+            <#include "fields/plan.ftl" />
+            <#include "fields/send.ftl" />
+            <#include "fields/garant.ftl" />
+
+
             <div class="form-group">
                 <label>Файл для загрузки: </label>
                 <input type="file" name="file1" id="inFile1" class="form-control" />
