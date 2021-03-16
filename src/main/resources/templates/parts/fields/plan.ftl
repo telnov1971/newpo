@@ -7,6 +7,10 @@
                         <#if plan.id==demand.plan.id>
                             selected
                         </#if>
+                    <#else>
+                        <#if plan.id==1>
+                            selected
+                        </#if>
                     </#if>
             ></option>
         </#list>

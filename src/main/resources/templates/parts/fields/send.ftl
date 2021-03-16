@@ -7,6 +7,10 @@
                         <#if send.id==demand.send.id>
                             selected
                         </#if>
+                    <#else>
+                        <#if send.id==1>
+                            selected
+                        </#if>
                     </#if>
             ></option>
         </#list>

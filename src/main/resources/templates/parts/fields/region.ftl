@@ -7,6 +7,10 @@
                         <#if region.id==demand.region.id>
                             selected
                         </#if>
+                    <#else>
+                        <#if region.id==1>
+                            selected
+                        </#if>
                     </#if>
             ></option>
         </#list>

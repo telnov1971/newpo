@@ -23,6 +23,9 @@ public class HistoryEntity {
     @Column(name = "load1c")
     private Boolean load1c;
 
+    @Column(name = "client")
+    private Boolean client;
+
     @ManyToOne
     @JoinColumn(name = "demand_id")
     private DemandEntity demand;
@@ -74,5 +77,13 @@ public class HistoryEntity {
 
     public void setDemand(DemandEntity demand) {
         this.demand = demand;
+    }
+
+    public Boolean getClient() {
+        return client;
+    }
+
+    public void setClient(Boolean client) {
+        this.client = client;
     }
 }

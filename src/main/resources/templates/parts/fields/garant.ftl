@@ -7,6 +7,10 @@
                         <#if garant.id==demand.garant.id>
                             selected
                         </#if>
+                    <#else>
+                        <#if garant.id==1>
+                            selected
+                        </#if>
                     </#if>
             ></option>
         </#list>

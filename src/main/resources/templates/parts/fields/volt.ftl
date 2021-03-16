@@ -7,6 +7,10 @@
                         <#if volt.id==demand.volt.id>
                             selected
                         </#if>
+                    <#else>
+                        <#if volt.id==1>
+                            selected
+                        </#if>
                     </#if>
             ></option>
         </#list>

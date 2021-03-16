@@ -1,7 +1,7 @@
 <div class="form-group">
     <label>Объект: </label>
-    <textarea type="text" class="form-control ${(objectError??)?string('is-invalid', '')}"
-           rows="3" name="object" placeholder="Объект" >
+    <textarea class="form-control ${(objectError??)?string('is-invalid', '')}"
+           name="object" placeholder="Объект" wrap="soft">
     <#if demand??>${demand.object}</#if>
     <#if objectError??>
         <div class="invalid-feedback">

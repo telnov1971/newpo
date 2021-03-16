@@ -7,6 +7,10 @@
                         <#if safe.id==demand.safe.id>
                             selected
                         </#if>
+                    <#else>
+                        <#if safe.id==1>
+                            selected
+                        </#if>
                     </#if>
             ></option>
         </#list>

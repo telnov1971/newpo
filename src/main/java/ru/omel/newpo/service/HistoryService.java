@@ -33,6 +33,7 @@ public class HistoryService {
         historyEntity.setDemand(newDemand);
         historyEntity.setEvent(history);
         historyEntity.setLoad1c(false);
+        historyEntity.setClient(true);
         try {
             historyRepository.save(historyEntity);
             return true;
